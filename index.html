@@ -169,7 +169,13 @@ i.ti{display:inline-flex;align-items:center;justify-content:center;vertical-alig
 .suffixe-style{color:var(--text-muted);font-variation-settings:"wght" 230,"wdth" 76,"GRAD" 0,"ROND" 75,"slnt" -5}
 .contenu-style{font-weight:139;font-variation-settings:"slnt" 0,"wdth" 70,"GRAD" 0,"ROND" 0}
 .id-suf{display:none}
-
+/* En-tête du tableau arrondi */
+.table-card table{border-collapse:separate;border-spacing:0}
+.table-card thead{background:none;box-shadow:none}
+.table-card thead th{background:linear-gradient(180deg,#20203c,#181830);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.table-card thead th:first-child{border-top-left-radius:var(--radius)}
+.table-card thead th:last-child{border-top-right-radius:var(--radius)}
+    
 /* Modal */
 #myModal{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:1050;display:flex;align-items:center;justify-content:center;padding:1rem;
     opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s,background .25s,visibility 0s linear .25s,backdrop-filter .25s}
