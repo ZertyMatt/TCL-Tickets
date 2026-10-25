@@ -10,10 +10,9 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://api.npoint.io" crossorigin>
 <link rel="preload" href="./fonts/Google%20Sans%20Flex.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="./icons.css">
 <style>
 @font-face{font-family:"Google Sans Flex";src:url("./fonts/Google%20Sans%20Flex.ttf") format("truetype");font-weight:100 1000;font-stretch:25% 151%;font-style:normal;font-display:swap}
 *,*::before,*::after{box-sizing:border-box}
@@ -122,7 +121,7 @@ i.ti{display:inline-flex;align-items:center;justify-content:center;vertical-alig
 .stat-card .value{font-size:1.5rem;display:inline-block;font-variation-settings:"wght" 692,"wdth" 125,"GRAD" 0,"ROND" 0,"slnt" -8}
 .stat-card .value.flash{animation:fadeInUp .35s ease}
 .table-card{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-radius:var(--radius);
-    border:1px solid var(--glass-border-soft);overflow-x:auto;box-shadow:0 4px 30px rgba(0,0,0,.2)}
+    border:1px solid var(--glass-border-soft);overflow-x:clip;box-shadow:0 4px 30px rgba(0,0,0,.2)}
 .table-card table{margin:0;font-size:.875rem;width:100%}
 .table-card thead{position:sticky;top:calc(var(--header-h) + env(safe-area-inset-top,0px));z-index:60;
     background:linear-gradient(180deg,#20203c,#181830);
