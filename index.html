@@ -169,8 +169,13 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
 .fe{border-color:var(--err)!important;animation:shake .3s}
 #idWrap{display:flex;align-items:center;overflow:hidden}
 #idPre{padding:0 12px 0 16px;color:var(--onv);white-space:nowrap}
-#mIdSuffix{border:0;outline:0;background:transparent;flex:1;min-width:0;height:100%;padding:0 16px 0 0;font-size:.95rem}
-.sufd{display:flex;align-items:center;padding:0 16px;font-family:monospace;color:var(--p);font-size:1rem}
+.idbox{position:relative;flex:1;min-width:0;height:100%}
+#mIdSuffix,#idMirror{position:absolute;inset:0;width:100%;height:100%;padding:0 16px 0 0;border:0;outline:0;background:transparent;font-family:inherit;font-size:.95rem;font-variation-settings:"wght" 400,"wdth" 100,"ROND" 60}
+#mIdSuffix{color:transparent;caret-color:var(--on)}
+#mIdSuffix::placeholder{color:var(--onv);opacity:.5}
+#idMirror{display:flex;align-items:center;white-space:pre;pointer-events:none;color:var(--on)}
+.sfx2{font-weight:400;color:#ff5a50;-webkit-text-stroke:.7px currentColor}
+ .sufd{display:flex;align-items:center;padding:0 16px;font-family:monospace;color:var(--p);font-size:1rem}
 .err{font-size:12px;color:var(--err);margin:6px 0 0 4px;display:none}
 .csw{position:relative}
 .csb{cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px;user-select:none;min-width:0}
@@ -311,14 +316,16 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
   <button class="ibtn" onclick="fermerModal()" aria-label="Fermer"><i class="ti ti-x"></i></button>
  </div>
  <input type="hidden" id="editIndex">
- <div class="fg">
+<div class="fg">
   <label class="lab">Numéro de support <span id="idCounter">(0/12 chiffres)</span></label>
-  <div id="idWrap"><span id="idPre">06-14988599</span><input type="text" id="mIdSuffix" placeholder="000000000000" maxlength="12" inputmode="numeric" oninput="onIdInput(this)"></div>
+  <div id="idWrap"><span id="idPre">06-14988599</span>
+   <div class="idbox">
+    <input type="text" id="mIdSuffix" placeholder="000000000000" maxlength="12" inputmode="numeric" oninput="onIdInput(this)">
+    <div id="idMirror" aria-hidden="true"></div>
+   </div>
+  </div>
   <input type="hidden" id="mId"><div id="idError" class="err"></div>
- </div>
- <div class="fg">
-  <label class="lab">Suffixe (caractères 18–23)</label>
-  <div class="sufd" id="mSuffixeDisplay">—</div><input type="hidden" id="mSuffixe">
+  <input type="hidden" id="mSuffixe"><span id="mSuffixeDisplay" hidden></span>
  </div>
  <div class="row2">
   <div class="fg"><label class="lab">Contenu</label><div class="csw">
