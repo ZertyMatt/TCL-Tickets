@@ -217,6 +217,7 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
  .stat-ic{width:42px;height:42px;font-size:1.15rem}.stat .v{font-size:1.35rem}.stat .l{font-size:11px}
  .fab{height:56px;padding:0 20px 0 16px}
  #myModal{align-items:flex-end;padding:0}
+ .sfx{color:#ff5a50;font-variation-settings:"wght" 850,"wdth" 85,"ROND" 100}
  .sheet{max-width:100%;border-radius:28px 28px 0 0;max-height:92dvh;padding:12px 16px 16px;transform:translateY(100%)}
  .sheet::before{content:"";display:block;width:32px;height:4px;border-radius:2px;background:var(--out);margin:0 auto 12px}
  .tcard{background:none;border-radius:0}
@@ -229,14 +230,17 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
  tbody tr:hover td{background:none}
  td{display:flex;flex-direction:column;align-items:flex-start;gap:2px;height:auto;min-height:0;padding:0;border:0;min-width:0;font-size:.85rem}
  td::before{content:attr(data-label);font-size:10px;color:var(--onv);line-height:1}
- td:nth-child(1){grid-column:span 4}td:nth-child(2){grid-column:span 2;align-items:flex-end}
- td:nth-child(3),td:nth-child(4),td:nth-child(5){grid-column:span 2}   /* Format · Contenu · Zones */
- td:nth-child(6){grid-column:span 2}td:nth-child(7){grid-column:span 4} /* Qté · Emprunteur */
- td:nth-child(8){display:none}                                          /* État : fusionné dans Contenu */
- td:nth-child(9){grid-column:span 4;justify-content:flex-end}
- td:nth-child(10){grid-column:span 2;align-items:flex-end;justify-content:flex-end}
- td:nth-child(1)::before,td:nth-child(2)::before,td:nth-child(10)::before{content:none}
- td:last-child .btn{width:auto;height:36px;padding:0 12px}td:last-child .tc{display:none}
+ td::before{font-size:11px}
+ td:nth-child(1){grid-column:1/6;grid-row:1}                 /* ID, suffixe en gras */
+ td:nth-child(9){grid-column:6;grid-row:1;align-items:flex-end}  /* bouton éditer */
+ td:nth-child(2),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(6),td:nth-child(8){grid-column:span 2}
+ /* ligne 2 : Format · Contenu · Zones — ligne 3 : Quantité · Emprunteur · Ajouté le */
+ td:nth-child(7){display:none}                               /* État : fusionné dans Contenu */
+ td:nth-child(1)::before,td:nth-child(9)::before{content:none}
+ td:nth-child(6) .ec span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ td:last-child .btn{width:40px;height:40px;padding:0;border-radius:14px;background:var(--pc);color:var(--onpc)}
+ td:last-child .btn i{width:1.25rem;height:1.25rem;background:var(--onpc)}
+ td:last-child .tc{display:none}
  .chip{height:24px;padding:0 8px;font-size:11px}
  .zc{flex-wrap:wrap;gap:4px;font-size:11px}.zd{width:10px;height:10px}
  .id-suf{display:none}
@@ -247,6 +251,7 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
  tbody td,tbody td *{font-variation-settings:"wght" 450,"wdth" 100,"ROND" 60!important}
  tbody td.idc{font-variation-settings:"wght" 600,"wdth" 100,"ROND" 60!important}
  tbody .chip{font-variation-settings:"wght" 520,"wdth" 100,"ROND" 100!important}
+ tbody td .sfx{font-variation-settings:"wght" 850,"wdth" 100,"ROND" 60!important}
 }
 </style>
 </head>
@@ -279,12 +284,11 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
  <div class="tcard">
   <table>
    <thead><tr>
-    <th onclick="sortBy('id')">ID complet <i class="ti ti-arrows-sort si" data-col="id"></i></th>
-    <th onclick="sortBy('suffixe')">Suffixe <i class="ti ti-arrows-sort si" data-col="suffixe"></i></th>
+    <th onclick="sortBy('id')">Numéro de support <i class="ti ti-arrows-sort si" data-col="id"></i></th>
     <th onclick="sortBy('format')">Format <i class="ti ti-arrows-sort si" data-col="format"></i></th>
     <th onclick="sortBy('contenu')">Contenu <i class="ti ti-arrows-sort si" data-col="contenu"></i></th>
     <th onclick="sortBy('zones')">Zones <i class="ti ti-arrows-sort si" data-col="zones"></i></th>
-    <th onclick="sortBy('quantite')">Qté <i class="ti ti-arrows-sort si" data-col="quantite"></i></th>
+    <th onclick="sortBy('quantite')">Quantité <i class="ti ti-arrows-sort si" data-col="quantite"></i></th>
     <th onclick="sortBy('emprunteur')">Emprunteur <i class="ti ti-arrows-sort si" data-col="emprunteur"></i></th>
     <th onclick="sortBy('fonctionnel')">État <i class="ti ti-arrows-sort si" data-col="fonctionnel"></i></th>
     <th onclick="sortBy('ajoute')">Ajouté le <i class="ti ti-arrows-sort si" data-col="ajoute"></i></th>
@@ -308,7 +312,7 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
  </div>
  <input type="hidden" id="editIndex">
  <div class="fg">
-  <label class="lab">Numéro de ticket <span id="idCounter">(0/12 chiffres)</span></label>
+  <label class="lab">Numéro de support <span id="idCounter">(0/12 chiffres)</span></label>
   <div id="idWrap"><span id="idPre">06-14988599</span><input type="text" id="mIdSuffix" placeholder="000000000000" maxlength="12" inputmode="numeric" oninput="onIdInput(this)"></div>
   <input type="hidden" id="mId"><div id="idError" class="err"></div>
  </div>
@@ -773,14 +777,13 @@ function render(){
     tbody.innerHTML=rows.map(({t,i},idx)=>{
         const g=gain(t), tip=g?` title="Valeur : ${eur(g)}"`:'';
         return `<tr${anim?` class="in" style="animation-delay:${Math.min(idx*25,300)}ms"`:''} onclick="toggleSelectRow(this,event)">
-        <td class="idc" data-label="ID complet">${t.id||'—'}${perime(t)?'<i class="ti ti-alert-triangle wn" title="Plus de 2 ans et demi"></i>':''}</td>
-        <td class="suf" data-label="Suffixe">${t.suffixe||'—'}</td>
+        <td class="idc" data-label="Numéro de support"><span>${(t.id||'—').slice(0,17)}<b class="sfx">${(t.id||'').slice(17)}</b>${perime(t)?'<i class="ti ti-alert-triangle wn" title="Plus de 2 ans et demi"></i>':''}</span></td>
         <td data-label="Format">${formatChip(t.format)}</td>
         <td class="cnt" data-label="Contenu"><span>${t.fonctionnel==='non'
         ?'<span class="dsk">—</span><span class="mst ko"><i class="ti ti-x"></i>Non fonctionnel</span>'
         :(t.fonctionnel==='oui'?'<span class="mst ok"><i class="ti ti-check"></i></span>':'')+(t.contenu||'—')}</span></td>
         <td data-label="Zones"><div class="zc">${zonesDots(t.zones)}<span class="mut">${t.zones||'—'}</span></div></td>
-        <td data-label="Qté" style="font-weight:600"${tip}>${t.quantite||'—'}</td>
+        <td data-label="Quantité" style="font-weight:600"${tip}>${t.quantite||'—'}</td>
         <td data-label="Emprunteur"><div class="ec">${t.emprunteur&&t.emprunteur!=='—'?`<div class="av">${initials(t.emprunteur)}</div><span>${t.emprunteur}</span>`:'<span class="mut">—</span>'}</div></td>
         <td data-label="État">${etatChip(t.fonctionnel)}</td>
         <td class="mut" data-label="Ajouté le" title="${fmtDateHeure(t.ajoute)}" style="white-space:nowrap">${fmtDate(t.ajoute)}</td>
