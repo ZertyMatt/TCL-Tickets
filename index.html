@@ -196,7 +196,15 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
 .acts #btnSupp{flex-shrink:0}
 .acts .btn:hover{border-radius:28px}
 .acts .btn:active{border-radius:20px;transform:scale(.97)}
-
+.mst{display:none}
+.wn{color:#f5c518;margin-left:6px}
+.alertbar{display:none;align-items:center;gap:8px;padding:12px 16px;margin-bottom:12px;border-radius:20px;background:#4a3b00;color:#f5c518;font-size:.9rem}
+.zch{display:flex;flex-wrap:wrap;gap:6px;padding:2px;border-radius:16px}
+.zch.dis{opacity:.5;pointer-events:none}
+.zch.fe{outline:2px solid var(--err);animation:shake .3s}
+.zb{height:44px;min-width:44px;padding:0 14px;border:2px solid transparent;border-radius:14px;background:var(--c3);cursor:pointer;font-size:.95rem;transition:background .2s,border-radius .25s var(--spring)}
+.zb.on{background:var(--pc);color:var(--onpc);border-radius:22px}
+ 
 /* Responsive */
 @media(max-width:1100px){.tc{display:none}}
 @media(max-width:900px){.lbl{display:none}}
@@ -213,14 +221,32 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
  .sheet::before{content:"";display:block;width:32px;height:4px;border-radius:2px;background:var(--out);margin:0 auto 12px}
  .tcard{background:none;border-radius:0}
  table,thead,tbody,tr,th,td{display:block}thead{display:none}
- tbody tr{background:var(--c2);border-radius:24px;margin-bottom:8px;padding:4px 16px}
+
+ /* Carte compacte : grille de 6 colonnes */
+ tbody tr{display:grid;grid-template-columns:repeat(6,1fr);gap:6px 8px;background:var(--c2);border-radius:20px;margin-bottom:8px;padding:10px 12px}
  tbody tr.selected{background:var(--pc)}
  tbody tr.selected td{background:none}
- td{display:flex;align-items:center;justify-content:space-between;gap:12px;height:auto;min-height:48px;padding:6px 0;border-bottom:1px dashed var(--outv)}
  tbody tr:hover td{background:none}
- td::before{content:attr(data-label);font-size:12px;color:var(--onv);flex-shrink:0}
- td:last-child{border-bottom:0;padding:8px 0 6px}td:last-child::before{content:none}
- td:last-child .btn{width:100%;height:48px}
+ td{display:flex;flex-direction:column;align-items:flex-start;gap:2px;height:auto;min-height:0;padding:0;border:0;min-width:0;font-size:.85rem}
+ td::before{content:attr(data-label);font-size:10px;color:var(--onv);line-height:1}
+ td:nth-child(1){grid-column:span 4}td:nth-child(2){grid-column:span 2;align-items:flex-end}
+ td:nth-child(3),td:nth-child(4),td:nth-child(5){grid-column:span 2}   /* Format · Contenu · Zones */
+ td:nth-child(6){grid-column:span 2}td:nth-child(7){grid-column:span 4} /* Qté · Emprunteur */
+ td:nth-child(8){display:none}                                          /* État : fusionné dans Contenu */
+ td:nth-child(9){grid-column:span 4;justify-content:flex-end}
+ td:nth-child(10){grid-column:span 2;align-items:flex-end;justify-content:flex-end}
+ td:nth-child(1)::before,td:nth-child(2)::before,td:nth-child(10)::before{content:none}
+ td:last-child .btn{width:auto;height:36px;padding:0 12px}td:last-child .tc{display:none}
+ .chip{height:24px;padding:0 8px;font-size:11px}
+ .zc{flex-wrap:wrap;gap:4px;font-size:11px}.zd{width:10px;height:10px}
+ .id-suf{display:none}
+ .mst{display:inline-flex;align-items:center;gap:3px;margin-right:4px}
+ .mst.ok{color:var(--ok)}.mst.ko{color:var(--err)}.dsk{display:none}
+
+ /* Police : mêmes réglages sur toutes les cellules (seul l'ID est un peu plus gras) */
+ tbody td,tbody td *{font-variation-settings:"wght" 450,"wdth" 100,"ROND" 60!important}
+ tbody td.idc{font-variation-settings:"wght" 600,"wdth" 100,"ROND" 60!important}
+ tbody .chip{font-variation-settings:"wght" 520,"wdth" 100,"ROND" 100!important}
 }
 </style>
 </head>
@@ -248,6 +274,7 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
 
 <main>
  <label class="search"><i class="ti ti-search"></i><input type="search" id="searchInput" placeholder="Rechercher un suffixe, un contenu…"></label>
+ <div class="alertbar" id="alertBar"><i class="ti ti-alert-triangle"></i><span></span></div>
  <div class="stats" id="statsBar"></div>
  <div class="tcard">
   <table>
@@ -298,9 +325,13 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
    <div class="dd" id="dropFormat"></div><input type="hidden" id="mFormat"></div></div>
  </div>
  <div class="row2">
-  <div class="fg"><label class="lab">Zones</label><div class="csw">
-   <button type="button" class="csb ph" id="btnZones" onclick="toggleDropdown('Zones')"><span id="lblZones">Sélectionner…</span><i class="ti ti-chevron-down chev"></i></button>
-   <div class="dd" id="dropZones"></div><input type="hidden" id="mZones"></div></div>
+ <div class="fg"><label class="lab">Zones</label>
+  <div class="zch ph" id="btnZones">
+   <span id="lblZones" hidden></span><div id="dropZones" hidden></div>
+   <button type="button" class="zb" data-z="1">1</button><button type="button" class="zb" data-z="2">2</button>
+   <button type="button" class="zb" data-z="3">3</button><button type="button" class="zb" data-z="4">4</button>
+   <button type="button" class="zb" data-z="5">5</button><button type="button" class="zb" data-z="EXT">Externe</button>
+  </div><input type="hidden" id="mZones"></div>
   <div class="fg"><label class="lab">Quantité</label>
    <input type="number" id="mQte" placeholder="ex. 10" class="fc" min="1" inputmode="numeric">
    <div id="qteError" class="err">Quantité requise</div></div>
@@ -313,6 +344,8 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
   </div>
   <div id="foncError" class="err">Veuillez sélectionner une option</div>
  </div>
+ <div class="fg"><label class="lab">Date d'apparition du ticket (optionnel)</label>
+ <input type="date" id="mDate" class="fc"></div>
  <div class="mut" id="dateInfo" style="font-size:12px;margin:-4px 0 0 4px;display:none"></div>
  <div class="acts">
   <button class="btn fill" onclick="sauvegarder()"><i class="ti ti-device-floppy"></i> Enregistrer</button>
@@ -371,6 +404,41 @@ function gain(t){
 }
 const eur=n=>n.toLocaleString('fr-FR',{style:'currency',currency:'EUR'});
 const fmtDate=iso=>{const d=iso&&new Date(iso);return d&&!isNaN(d)?d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}):'—';};
+ /* ----- Alerte 2 ans et demi (30 mois) : date saisie, sinon date d'ajout ----- */
+const ALERTE_MOIS=30;
+function perime(t){
+    const d=new Date(t.emis||t.ajoute);
+    if(isNaN(d))return false;
+    d.setMonth(d.getMonth()+ALERTE_MOIS);
+    return d<=new Date();
+}
+
+/* ----- Sélecteur de zones par clic ----- */
+const ZCOL={'1':'#E2001A','2':'#e07b00','3':'#2e7d32','4':'#1a56c4','5':'#e91e8c','EXT':'#f5c518'};
+function parseZones(v){
+    const s=new Set();
+    if(!v||v==='—')return s;
+    if(v==='Toutes zones'){['1','2','3','4','5','EXT'].forEach(z=>s.add(z));return s;}
+    if(v==='Toutes zones sauf Z1'){['2','3','4','5','EXT'].forEach(z=>s.add(z));return s;}
+    (v.match(/\d|EXT/g)||[]).forEach(z=>s.add(z));
+    return s;
+}
+function zonesToStr(s){
+    if(!s.size)return '';
+    if(s.size===6)return 'Toutes zones';
+    if(s.size===5&&!s.has('1'))return 'Toutes zones sauf Z1';
+    const n=[...s].filter(z=>z!=='EXT').sort();
+    return 'Z'+n.concat(s.has('EXT')?['EXT']:[]).join(' & ');
+}
+function syncChips(v){
+    const s=parseZones(v);
+    document.querySelectorAll('#btnZones .zb').forEach(b=>b.classList.toggle('on',s.has(b.dataset.z)));
+}
+document.querySelectorAll('#btnZones .zb').forEach(b=>b.onclick=()=>{
+    const s=parseZones($('mZones').value);
+    s.has(b.dataset.z)?s.delete(b.dataset.z):s.add(b.dataset.z);
+    selectOption('Zones',zonesToStr(s));
+});
 const fmtDateHeure=iso=>{const d=iso&&new Date(iso);return d&&!isNaN(d)?d.toLocaleString('fr-FR',{dateStyle:'long',timeStyle:'short'}):'';};
 
 const DROPDOWN_DATA={
@@ -381,8 +449,10 @@ const DROPDOWN_DATA={
 const ZONE_MAP=Object.fromEntries(DROPDOWN_DATA.Zones.map(z=>[z.v,z.dots]));
 const FORMAT_COLOR=Object.fromEntries(DROPDOWN_DATA.Format.map(f=>[f.v,f.c]));
 const dot=c=>`<span class="zd" style="background:${c}"></span>`;
-const zonesDots=v=>(ZONE_MAP[v]||[]).map(dot).join('');
-
+const zonesDots=v=>{
+    if(ZONE_MAP[v])return ZONE_MAP[v].map(dot).join('');
+    return [...parseZones(v)].map(z=>dot(ZCOL[z])).join('');
+};
 function buildDropdowns(){
     for(const name of ['Contenu','Format','Zones']){
         const drop=$('drop'+name), frag=document.createDocumentFragment();
@@ -513,6 +583,7 @@ function selectOption(name,value){
     btn.classList.remove('fe');
     drop.querySelectorAll('.di').forEach((el,i)=>{if(i)el.classList.toggle('selected',el.textContent.trim()===value&&!!value);});
     drop.classList.remove('open');btn.classList.remove('open');
+    if(name==='Zones')syncChips(value);
     if(name==='Contenu')onContenuChange(value);
 }
 const setDropdownValue=selectOption;
@@ -584,6 +655,7 @@ function resetModal(){
     setDropdownValue('Format','');
     delete $('mContenu').dataset.prev;delete $('mZones').dataset.prev;delete q.dataset.prev;
     closeAllDropdowns(null);
+    $('mDate').value='';
 }
 
 function ouvrirModal(index=-1){
@@ -605,6 +677,7 @@ function ouvrirModal(index=-1){
             $('mQte').value=t.quantite||'';onContenuChange(t.contenu||'');
         }
         const di=fmtDateHeure(t.ajoute);
+        $('mDate').value=t.emis||'';
         if(di){$('dateInfo').textContent='Ajouté le '+di;$('dateInfo').style.display='block';}
     }
     requestAnimationFrame(()=>$('myModal').classList.add('open'));
@@ -647,6 +720,7 @@ function sauvegarder(){
         id:fullId, suffixe:$('mSuffixe').value, format,
         contenu:isNon?'—':contenu, zones:isNon?'—':zones, quantite:isNon?'—':q.value,
         emprunteur:$('mEmp').value.trim()||'—', fonctionnel,
+        emis:$('mDate').value,
         /* Date d'ajout automatique : posée à la création, conservée ensuite */
         ajoute:editIndex===-1?new Date().toISOString():(tickets[editIndex].ajoute||'')
     };
@@ -690,16 +764,21 @@ function etatChip(v){
 
 function render(){
     renderStats();majIconesTri();
+    const nbOld=tickets.filter(perime).length, ab=$('alertBar');
+    ab.style.display=nbOld?'flex':'none';
+    ab.querySelector('span').textContent=`${nbOld} ticket${nbOld>1?'s':''} de plus de 2 ans et demi`;
     const rows=getTicketsTries(), tbody=$('ticketBody');
     $('emptyState').style.display=rows.length?'none':'block';
     const anim=firstRender&&rows.length;
     tbody.innerHTML=rows.map(({t,i},idx)=>{
         const g=gain(t), tip=g?` title="Valeur : ${eur(g)}"`:'';
         return `<tr${anim?` class="in" style="animation-delay:${Math.min(idx*25,300)}ms"`:''} onclick="toggleSelectRow(this,event)">
-        <td class="idc" data-label="ID complet">${t.id||'—'}</td>
+        <td class="idc" data-label="ID complet">${t.id||'—'}${perime(t)?'<i class="ti ti-alert-triangle wn" title="Plus de 2 ans et demi"></i>':''}</td>
         <td class="suf" data-label="Suffixe">${t.suffixe||'—'}</td>
         <td data-label="Format">${formatChip(t.format)}</td>
-        <td class="cnt" data-label="Contenu">${t.contenu||'—'}</td>
+        <td class="cnt" data-label="Contenu"><span>${t.fonctionnel==='non'
+        ?'<span class="dsk">—</span><span class="mst ko"><i class="ti ti-x"></i>Non fonctionnel</span>'
+        :(t.fonctionnel==='oui'?'<span class="mst ok"><i class="ti ti-check"></i></span>':'')+(t.contenu||'—')}</span></td>
         <td data-label="Zones"><div class="zc">${zonesDots(t.zones)}<span class="mut">${t.zones||'—'}</span></div></td>
         <td data-label="Qté" style="font-weight:600"${tip}>${t.quantite||'—'}</td>
         <td data-label="Emprunteur"><div class="ec">${t.emprunteur&&t.emprunteur!=='—'?`<div class="av">${initials(t.emprunteur)}</div><span>${t.emprunteur}</span>`:'<span class="mut">—</span>'}</div></td>
