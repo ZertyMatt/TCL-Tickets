@@ -70,7 +70,8 @@ body.locked #lockScreen{display:flex}
 .logo{height:44px;flex-shrink:0;display:flex}.logo svg{height:100%;width:auto}
 .bar h1{margin:0;font-size:1.3rem;font-variation-settings:"wght" 560,"wdth" 108,"ROND" 100;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .bar .sp{flex:1}
-.sync{height:32px;padding:0 12px;border-radius:16px;display:flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap;background:var(--c3);color:var(--onv);
+.bar .ibtn{width:40px;height:40px}
+.sync{height:40px;padding:0 14px;border-radius:16px;display:flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap;background:var(--c3);color:var(--onv);
  font-variation-settings:"wght" 560,"wdth" 95,"ROND" 100}
 .sync.ok{background:var(--okc);color:var(--ok)}.sync.error{background:var(--errc);color:var(--err);animation:shake .4s}
 .sync.saving i{animation:pulse 1s infinite}@keyframes pulse{50%{opacity:.4}}
@@ -129,7 +130,10 @@ tbody tr.in{animation:up .3s ease backwards}
 .sh h5{margin:0;font-size:1.3rem;display:flex;align-items:center;gap:10px;font-variation-settings:"wght" 560,"wdth" 108,"ROND" 100}
 .lab{font-size:12px;color:var(--onv);margin:0 0 6px 4px;display:block}
 .fg{margin-bottom:16px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:0 2px}
+.row2>.fg:first-child :is(.csb,input.fc){border-radius:16px 6px 6px 16px}
+.row2>.fg:last-child :is(.csb,input.fc){border-radius:6px 16px 16px 6px}
+.row2>.fg:first-child .lab{margin-left:4px}.row2>.fg:last-child .lab{margin-left:12px}
 input.fc,.csb,.sufd,#idWrap,.tg{height:var(--ctl);border-radius:16px;background:var(--c3);border:2px solid transparent;font-size:.95rem;width:100%}
 input.fc,.csb{padding:0 16px}
 input.fc:focus,.csb:focus,#idWrap:focus-within{outline:0;border-color:var(--p);background:var(--c4)}
@@ -160,10 +164,10 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
 .acts .btn:first-child{border-radius:28px 8px 8px 28px}
 .acts .btn:last-child{border-radius:8px 28px 28px 8px}
 .acts .fill{flex:1}
-.acts #btnSupp,.acts #btnSupp:hover,.acts #btnSupp:active{width:56px;height:56px;padding:0;font-size:1.3rem;align-self:center;flex-shrink:0;border-radius:0}
+.acts .btn{padding:0 16px;white-space:nowrap}
+.acts #btnSupp{flex-shrink:0}
 .acts .btn:hover{border-radius:28px}
 .acts .btn:active{border-radius:20px;transform:scale(.97)}
-.acts #btnSupp:hover{transform:scale(1.08) rotate(-6deg)}
 
 /* Responsive */
 @media(max-width:1100px){.tc{display:none}}
@@ -179,7 +183,6 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
  #myModal{align-items:flex-end;padding:0}
  .sheet{max-width:100%;border-radius:28px 28px 0 0;max-height:92dvh;padding:12px 16px 16px;transform:translateY(100%)}
  .sheet::before{content:"";display:block;width:32px;height:4px;border-radius:2px;background:var(--out);margin:0 auto 12px}
- .row2{grid-template-columns:1fr}
  .tcard{background:none;border-radius:0}
  table,thead,tbody,tr,th,td{display:block}thead{display:none}
  tbody tr{background:var(--c2);border-radius:24px;margin-bottom:8px;padding:4px 16px}
@@ -190,8 +193,6 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
  td::before{content:attr(data-label);font-size:12px;color:var(--onv);flex-shrink:0}
  td:last-child{border-bottom:0;padding:8px 0 6px}td:last-child::before{content:none}
  td:last-child .btn{width:100%;height:48px}
- body.searching .id-full{display:none}body.searching .id-suf{display:inline}
- body.searching td:nth-child(2),body.searching td:nth-child(2){display:none}
 }
 </style>
 </head>
@@ -287,7 +288,7 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
  <div class="mut" id="dateInfo" style="font-size:12px;margin:-4px 0 0 4px;display:none"></div>
  <div class="acts">
   <button class="btn fill" onclick="sauvegarder()"><i class="ti ti-device-floppy"></i> Enregistrer</button>
-  <button id="btnSupp" class="btn danger" onclick="confirmerSuppression(event)" style="display:none" aria-label="Supprimer"><i class="ti ti-trash"></i></button>
+  <button id="btnSupp" class="btn danger" onclick="confirmerSuppression(event)" style="display:none"><i class="ti ti-trash"></i> Supprimer</button>
   <button class="btn" onclick="fermerModal()">Annuler</button>
  </div>
 </div></div>
@@ -644,7 +645,7 @@ function render(){
     tbody.innerHTML=rows.map(({t,i},idx)=>{
         const g=gain(t), tip=g?` title="Valeur : ${eur(g)}"`:'';
         return `<tr${anim?` class="in" style="animation-delay:${Math.min(idx*25,300)}ms"`:''} onclick="toggleSelectRow(this,event)">
-        <td class="idc" data-label="ID complet"><span class="id-full">${t.id||'—'}</span><span class="id-suf">${t.suffixe||'—'}</span></td>
+        <td class="idc" data-label="ID complet">${t.id||'—'}</td>
         <td class="suf" data-label="Suffixe">${t.suffixe||'—'}</td>
         <td data-label="Format">${formatChip(t.format)}</td>
         <td class="cnt" data-label="Contenu">${t.contenu||'—'}</td>
@@ -664,11 +665,9 @@ function toggleSelectRow(tr,e){
     if(!was)tr.classList.add('selected');
 }
 
-/* Recherche débouncée ; mode « suffixe seul » sur mobile pendant la recherche */
-const si=$('searchInput');let st;
-const majSearching=()=>document.body.classList.toggle('searching',document.activeElement===si||!!si.value);
-si.addEventListener('focus',majSearching);si.addEventListener('blur',majSearching);
-si.addEventListener('input',()=>{majSearching();clearTimeout(st);st=setTimeout(render,150);});
+/* Recherche débouncée */
+let st;
+$('searchInput').addEventListener('input',()=>{clearTimeout(st);st=setTimeout(render,150);});
 
 /* ---------- Accès : mot de passe OU carte NFC ----------
    Empreintes injectées au déploiement (GitHub Actions) depuis les secrets SafetyPassCode et NFCacess. */
@@ -723,7 +722,7 @@ function initAuth(){
 
 /* Forme « cookie » M3E (9 lobes) partagée par le verrou et le bouton Supprimer */
 const cookie=(n=9,a=.075)=>'polygon('+Array.from({length:240},(_,i)=>{const t=i/240*2*Math.PI,r=46*(1+a*Math.cos(n*t));return (50+r*Math.cos(t)).toFixed(2)+'% '+(50+r*Math.sin(t)).toFixed(2)+'%';}).join(',')+')';
-document.querySelectorAll('.lock-ic,#btnSupp').forEach(e=>e.style.clipPath=cookie());
+document.querySelectorAll('.lock-ic').forEach(e=>e.style.clipPath=cookie());
 buildDropdowns();
 initAuth();
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
