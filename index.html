@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>TCL - Tickets</title>
-<meta name="theme-color" content="#131320">
+<meta name="theme-color" content="#1a1111">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="./manifest.webmanifest">
@@ -14,443 +14,283 @@
 <link rel="preload" href="./fonts/Google%20Sans%20Flex.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="stylesheet" href="./icons.css">
 <style>
-@font-face{font-family:"Google Sans Flex";src:url("./fonts/Google%20Sans%20Flex.ttf") format("truetype");font-weight:100 1000;font-stretch:25% 151%;font-style:normal;font-display:swap}
+@font-face{font-family:"Google Sans Flex";src:url("./fonts/Google%20Sans%20Flex.ttf") format("truetype");font-weight:100 1000;font-stretch:25% 151%;font-display:swap}
 *,*::before,*::after{box-sizing:border-box}
-html{font-size:clamp(13px,.5vw + 11px,16px);-webkit-text-size-adjust:100%}
-html,body{min-height:100%;margin:0;padding:0}
-
+html{-webkit-text-size-adjust:100%}
+html,body{min-height:100%;margin:0}
 :root{
-    --red:#E2001A;--red-light:#ff4d5e;--red-soft:#ff8a8a;
-    --red-dark:rgba(226,0,26,.25);--red-glow:rgba(226,0,26,.4);
-    --bg-dark:#131320;
-    --glass:rgba(255,255,255,.055);
-    --glass-strong:rgba(255,255,255,.1);
-    --glass-border:rgba(255,255,255,.13);
-    --glass-border-soft:rgba(255,255,255,.08);
-    --bg-header:rgba(22,22,40,.62);
-    --border:rgba(255,255,255,.1);
-    --text:#fff;--text-muted:rgba(255,255,255,.62);--text-dim:rgba(255,255,255,.4);
-    --radius:16px;--radius-sm:11px;--header-h:70px;
-    --gsf:"Google Sans Flex",system-ui,sans-serif;
-    --ease-spring:cubic-bezier(.34,1.56,.64,1);
-    --ease-out:cubic-bezier(.16,1,.3,1);
-    --blur:blur(22px) saturate(150%)
+ --p:#ffb3ae;--onp:#68000f;--pc:#92001b;--onpc:#ffdad6;
+ --s:#1a1111;--c1:#231919;--c2:#271d1d;--c3:#322828;--c4:#3d3232;
+ --on:#f0dedc;--onv:#d8c2c0;--out:#a08c8b;--outv:#534341;
+ --ok:#a5d6a7;--okc:#1f4a24;--err:#ffb4ab;--errc:#93000a;
+ --bar:64px;--f:"Google Sans Flex",system-ui,sans-serif;
+ --spring:cubic-bezier(.34,1.56,.64,1);--emph:cubic-bezier(.2,0,0,1);--ctl:52px
 }
-body{background:var(--bg-dark);color:var(--text);font-family:var(--gsf);line-height:1.5}
-button,input{font-family:inherit}
-table{border-collapse:collapse}
-h1,h2{margin:0}
-body::before{content:"";position:fixed;inset:0;background:url('./bg.png') center/cover no-repeat;z-index:0;pointer-events:none;filter:saturate(1.1)}
-body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-    background:
-        radial-gradient(circle at 12% 15%,rgba(226,0,26,.22),transparent 42%),
-        radial-gradient(circle at 88% 80%,rgba(60,90,230,.16),transparent 48%),
-        rgba(8,8,16,.58)}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
-
-/* Scrollbars fines */
-.modal-box::-webkit-scrollbar,.table-card::-webkit-scrollbar,.custom-dropdown::-webkit-scrollbar{width:8px;height:8px}
-.modal-box::-webkit-scrollbar-thumb,.table-card::-webkit-scrollbar-thumb,.custom-dropdown::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:8px}
-.modal-box::-webkit-scrollbar-track,.table-card::-webkit-scrollbar-track,.custom-dropdown::-webkit-scrollbar-track{background:transparent}
+body{background:var(--s);color:var(--on);font-family:var(--f);line-height:1.45;font-size:15px;
+ font-variation-settings:"wght" 400,"wdth" 100,"ROND" 60}
+button,input{font-family:inherit;color:inherit}
+i.ti{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle}
+:focus-visible{outline:3px solid var(--p);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.001ms!important}}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
 /* Verrouillage */
-body.locked .page-header,body.locked .content-area,body.locked #myModal{display:none}
-#lockScreen{display:none;position:fixed;inset:0;z-index:3000;align-items:center;justify-content:center;padding:1rem;
-    background:rgba(9,9,20,.55);backdrop-filter:blur(34px) saturate(140%);-webkit-backdrop-filter:blur(34px) saturate(140%)}
+body.locked .bar,body.locked main,body.locked .fab,body.locked #myModal{display:none}
+#lockScreen{display:none;position:fixed;inset:0;z-index:3000;align-items:center;justify-content:center;padding:1rem;background:var(--s)}
 body.locked #lockScreen{display:flex}
-.lock-box{width:100%;max-width:380px;background:linear-gradient(180deg,rgba(40,40,70,.82),rgba(24,24,42,.86));
-    backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-    border:1px solid var(--glass-border);border-radius:22px;padding:2.35rem 1.9rem;text-align:center;
-    box-shadow:0 30px 80px rgba(0,0,0,.5);animation:fadeInUp .45s var(--ease-out) backwards}
-.lock-icon-wrap{width:62px;height:62px;margin:0 auto .9rem;border-radius:18px;display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(135deg,rgba(226,0,26,.32),rgba(226,0,26,.08));border:1px solid rgba(226,0,26,.3)}
-.lock-icon{font-size:1.9rem;color:var(--red-soft)}
-.lock-box h2{font-size:1.1rem;font-weight:600;margin:0 0 1.35rem;color:var(--red-soft);
-    font-variation-settings:"wght" 600,"wdth" 100,"GRAD" 0,"ROND" 10,"slnt" -8}
-.lock-box .btn-save,.lock-box .btn-cancel{width:100%;margin-top:.75rem}
-.lock-box .btn-save:disabled{opacity:.5;cursor:not-allowed}
-.lock-sep{margin-top:1.1rem;font-size:11px;color:var(--text-dim);display:flex;align-items:center;gap:.6rem}
-.lock-sep::before,.lock-sep::after{content:"";flex:1;height:1px;background:var(--glass-border-soft)}
-#lockMsg{min-height:1.2em;font-size:12px;margin-top:1rem;color:var(--text-muted)}
-#lockMsg.err{color:#ef9a9a}
+.lock-box{width:100%;max-width:380px;background:var(--c2);border-radius:28px;padding:32px 24px;text-align:center;animation:up .4s var(--emph)}
+.lock-ic{width:72px;height:72px;margin:0 auto 16px;background:var(--pc);color:var(--onpc);font-size:2rem;
+ border-radius:30% 70% 70% 30%/30% 30% 70% 70%;display:flex;align-items:center;justify-content:center}
+.lock-box h2{margin:0 0 20px;font-size:1.4rem;font-variation-settings:"wght" 600,"wdth" 110,"ROND" 100}
+.lock-box .btn{width:100%;margin-top:12px}
+.lock-sep{margin:16px 0 4px;font-size:12px;color:var(--out)}
+#lockMsg{min-height:1.3em;font-size:13px;margin-top:12px;color:var(--onv)}
+#lockMsg.err{color:var(--err)}
 
-/* En-tête */
-.page-header{position:sticky;top:0;z-index:100;height:calc(70px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 1.5rem 0 0;
-    display:flex;align-items:center;gap:1rem;background:var(--bg-header);
-    backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-    border-bottom:1px solid var(--glass-border-soft);box-shadow:0 8px 32px rgba(0,0,0,.28)}
-.header-svg-wrap{height:64px;flex-shrink:0;display:flex;filter:drop-shadow(0 3px 10px rgba(226,0,26,.35))}
-.header-svg-wrap svg{height:100%;width:auto;display:block}
-.page-header h1{font-size:1.05rem;font-weight:380;letter-spacing:.01em;
-    font-variation-settings:"wght" 520,"wdth" 102,"GRAD" 0,"ROND" 20,"slnt" -6}
-.sync-status{font-size:11px;font-weight:600;padding:6px 12px;border-radius:20px;display:flex;align-items:center;gap:6px;white-space:nowrap;
-    border:1px solid transparent;transition:background .25s,color .25s,border-color .25s}
-.sync-status.idle{background:var(--glass);border-color:var(--glass-border-soft);color:var(--text-muted)}
-.sync-status.saving{background:rgba(255,255,255,.16);border-color:var(--glass-border)}
-.sync-status.ok{background:rgba(46,125,50,.25);border-color:rgba(165,214,167,.35);color:#a5d6a7;animation:pop .35s var(--ease-spring)}
-.sync-status.error{background:rgba(181,0,21,.25);border-color:rgba(239,154,154,.35);color:#ef9a9a;animation:shake .4s}
-.sync-status.saving i{animation:pulse 1s ease-in-out infinite}
-@keyframes pop{0%{transform:scale(.85)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
-@keyframes pulse{50%{opacity:.45}}
-@keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.toolbar-btn,.btn-add{background:var(--glass);color:#fff;border:1px solid var(--glass-border-soft);font-weight:600;padding:.5rem 1.05rem;
-    border-radius:var(--radius-sm);cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-size:.85rem;
-    backdrop-filter:blur(10px);transition:background .18s,border-color .18s,transform .15s var(--ease-out),box-shadow .18s;
-    font-variation-settings:"wght" 560,"wdth" 92,"GRAD" 0,"ROND" 40,"slnt" 0}
-i.ti{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle}
-.toolbar-btn:hover{background:var(--glass-strong);border-color:var(--glass-border);transform:translateY(-1px)}
-.toolbar-btn:active,.btn-add:active{transform:scale(.94)}
-.btn-add{margin-left:auto;background:linear-gradient(135deg,var(--red),#ff3b4e);border-color:rgba(255,255,255,.28);font-weight:700;
-    box-shadow:0 4px 18px rgba(226,0,26,.35)}
-.btn-add:hover{box-shadow:0 6px 26px rgba(226,0,26,.5);transform:translateY(-1px);background:linear-gradient(135deg,#c40015,var(--red))}
+/* Boutons */
+.btn{height:48px;padding:0 24px;border-radius:24px;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ font-size:.95rem;background:var(--c4);color:var(--on);font-variation-settings:"wght" 560,"wdth" 100,"ROND" 100;
+ transition:border-radius .25s var(--spring),transform .15s,background .2s}
+.btn:hover{border-radius:14px}.btn:active{transform:scale(.96);border-radius:12px}
+.btn.fill{background:var(--p);color:var(--onp)}
+.btn.danger{background:var(--errc);color:var(--err)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.ibtn{width:48px;height:48px;border-radius:50%;border:0;background:transparent;color:var(--onv);font-size:1.3rem;cursor:pointer;
+ display:inline-flex;align-items:center;justify-content:center;transition:background .2s,border-radius .25s var(--spring)}
+.ibtn:hover{background:var(--c4);border-radius:16px}
+.fab{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:90;height:64px;padding:0 24px 0 20px;
+ border:0;border-radius:20px;background:var(--pc);color:var(--onpc);display:flex;align-items:center;gap:12px;font-size:1.05rem;cursor:pointer;
+ font-variation-settings:"wght" 600,"wdth" 105,"ROND" 100;box-shadow:0 6px 20px rgba(0,0,0,.4);transition:border-radius .3s var(--spring),transform .15s}
+.fab:hover{border-radius:32px}.fab:active{transform:scale(.94)}.fab i{font-size:1.6rem}
+
+/* Barre */
+.bar{position:sticky;top:0;z-index:100;height:calc(var(--bar) + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 8px 0 12px;
+ display:flex;align-items:center;gap:8px;background:var(--s)}
+.logo{height:44px;flex-shrink:0;display:flex}.logo svg{height:100%;width:auto}
+.bar h1{margin:0;font-size:1.3rem;font-variation-settings:"wght" 560,"wdth" 108,"ROND" 100;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.bar .sp{flex:1}
+.sync{height:32px;padding:0 12px;border-radius:16px;display:flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap;background:var(--c3);color:var(--onv);
+ font-variation-settings:"wght" 560,"wdth" 95,"ROND" 100}
+.sync.ok{background:var(--okc);color:var(--ok)}.sync.error{background:var(--errc);color:var(--err);animation:shake .4s}
+.sync.saving i{animation:pulse 1s infinite}@keyframes pulse{50%{opacity:.4}}
 
 /* Contenu */
-.content-area{position:relative;z-index:1;padding:1.5rem}
-.stats-bar{display:flex;gap:.85rem;margin-bottom:1.35rem;flex-wrap:wrap}
-.stat-card{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);padding:.9rem 1.25rem;min-width:150px;
-    border-radius:var(--radius);border:1px solid var(--glass-border-soft);display:flex;align-items:center;gap:.85rem;
-    box-shadow:0 4px 26px rgba(0,0,0,.2);animation:fadeInUp .4s var(--ease-out) backwards;
-    transition:transform .2s var(--ease-out),border-color .2s}
-.stat-card:hover{transform:translateY(-2px);border-color:var(--glass-border)}
-.stat-icon{width:40px;height:40px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.15rem;
-    background:var(--icon-bg,var(--red-dark));color:var(--icon-color,var(--red-soft))}
-.stat-body{display:flex;flex-direction:column;min-width:0}
-.stat-card .label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;
-    font-variation-settings:"wght" 400,"wdth" 87.5,"GRAD" 100,"ROND" 66,"slnt" 0}
-.stat-card .value{font-size:1.5rem;display:inline-block;font-variation-settings:"wght" 692,"wdth" 125,"GRAD" 0,"ROND" 0,"slnt" -8}
-.stat-card .value.flash{animation:fadeInUp .35s ease}
-.table-card{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-radius:var(--radius);
-    border:1px solid var(--glass-border-soft);overflow-x:clip;box-shadow:0 4px 30px rgba(0,0,0,.2)}
-.table-card table{margin:0;font-size:.875rem;width:100%}
-.table-card thead{position:sticky;top:calc(var(--header-h) + env(safe-area-inset-top,0px));z-index:60;
-    background:linear-gradient(180deg,#20203c,#181830);
-    box-shadow:0 8px 20px rgba(0,0,0,.3);transform:translateZ(0)}
-.table-card thead th{color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;
-    letter-spacing:.06em;padding:.9rem 1rem;border-bottom:1px solid var(--glass-border-soft);cursor:pointer;user-select:none;
-    white-space:nowrap;text-align:left;transition:color .15s;font-variation-settings:"wght" 460,"wdth" 80,"GRAD" 0,"ROND" 20,"slnt" 0}
-.table-card thead th:hover{color:#fff}
-.table-card thead th.no-sort{cursor:default}
-.sort-icon{margin-left:4px;font-size:13px;opacity:.35}
-.sort-icon.active{opacity:1;color:var(--red-light)}
-.table-card tbody td{padding:.8rem 1rem;border-bottom:1px solid var(--glass-border-soft);vertical-align:middle}
-.table-card tbody tr.r-in{animation:fadeInUp .3s ease backwards}
-.table-card tbody tr{transition:background .15s}
-.table-card tbody tr:hover td{background:rgba(255,255,255,.045)}
-.table-card tbody tr.selected td{background:rgba(226,0,26,.14)}
-.table-card tbody tr:last-child td{border-bottom:none}
-.badge-format,.badge-etat{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:600;
-    font-variation-settings:"wght" 540,"wdth" 96,"GRAD" 0,"ROND" 70,"slnt" 0}
-.badge-format{background:linear-gradient(135deg,rgba(226,0,26,.24),rgba(226,0,26,.07));border:1px solid rgba(226,0,26,.28);color:#ff9aa6;
-    transition:background .2s,border-color .2s,color .2s}
-.badge-format i{font-size:12px}
-.badge-etat.ok{background:rgba(46,125,50,.22);border:1px solid rgba(165,214,167,.3);color:#a5d6a7}
-.badge-etat.ko{background:rgba(181,0,21,.22);border:1px solid rgba(239,154,154,.3);color:#ef9a9a}
-.zones-cell,.emprunteur-cell{display:flex;align-items:center;gap:6px}
-.zone-dot{width:10px;height:10px;border-radius:50%;display:inline-block;box-shadow:0 0 0 2px rgba(255,255,255,.07),0 0 8px rgba(0,0,0,.35)}
-.emp-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,rgba(226,0,26,.4),rgba(226,0,26,.14));
-    color:#ff9aa6;border:1px solid rgba(226,0,26,.28);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.btn-edit{background:var(--glass);border:1px solid var(--glass-border-soft);color:var(--text);border-radius:9px;padding:5px 11px;
-    font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .18s,border-color .18s,color .18s,transform .15s;
-    font-variation-settings:"wght" 520,"wdth" 92,"GRAD" 0,"ROND" 40,"slnt" 0}
-.btn-edit:hover{background:rgba(226,0,26,.16);border-color:rgba(226,0,26,.4);color:#ff9aa6;transform:translateY(-1px)}
-.empty-state{text-align:center;padding:4rem 1.5rem;color:var(--text-muted)}
-.empty-icon{width:64px;height:64px;margin:0 auto 1.1rem;border-radius:18px;display:flex;align-items:center;justify-content:center;
-    background:var(--glass-strong);border:1px solid var(--glass-border-soft);font-size:1.8rem;color:var(--red-soft)}
-.empty-state p{margin:0 0 .3rem;font-size:1rem;color:#fff;font-weight:600}
-.empty-state .empty-sub{font-size:.82rem;color:var(--text-dim)}
-.search-wrap{display:flex;align-items:center;background:var(--glass);border:1px solid var(--glass-border-soft);border-radius:var(--radius-sm);
-    overflow:hidden;width:220px;backdrop-filter:blur(10px);transition:border-color .2s,background .2s}
-.search-wrap:focus-within{border-color:var(--red);background:var(--glass-strong)}
-.search-icon-btn{background:none;border:none;color:#fff;padding:0 10px;cursor:pointer;font-size:1rem;display:flex;align-items:center}
-.search-input{background:none;border:none;outline:none;color:#fff;font-size:.85rem;width:100%;padding:6px 8px}
-.search-input::placeholder{color:var(--text-muted)}
-.id-style{color:var(--red-soft);font-variation-settings:"wght" 72,"wdth" 50,"GRAD" 0,"ROND" 0,"slnt" 0}
-.suffixe-style{color:var(--text-muted);font-variation-settings:"wght" 230,"wdth" 76,"GRAD" 0,"ROND" 75,"slnt" -5}
-.contenu-style{font-weight:139;font-variation-settings:"slnt" 0,"wdth" 70,"GRAD" 0,"ROND" 0}
-.id-suf{display:none}
-/* En-tête du tableau arrondi */
-.table-card table{border-collapse:separate;border-spacing:0}
-.table-card thead{background:none;box-shadow:none}
-.table-card thead th{background:linear-gradient(180deg,#20203c,#181830);box-shadow:0 8px 20px rgba(0,0,0,.3)}
-.table-card thead th:first-child{border-top-left-radius:var(--radius)}
-.table-card thead th:last-child{border-top-right-radius:var(--radius)}
-    
+main{padding:4px 16px 104px;max-width:1500px;margin:0 auto}
+.search{height:56px;border-radius:28px;background:var(--c3);display:flex;align-items:center;gap:4px;padding:0 8px 0 16px;margin-bottom:16px;transition:background .2s}
+.search:focus-within{background:var(--c4)}
+.search i{color:var(--onv);font-size:1.3rem}
+.search input{flex:1;min-width:0;height:100%;background:none;border:0;outline:0;font-size:1rem}
+.search input::placeholder{color:var(--onv)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin-bottom:16px}
+.stat{height:88px;padding:0 16px;border-radius:28px;background:var(--c2);display:flex;align-items:center;gap:12px;animation:up .4s var(--emph) backwards}
+.stat:nth-child(2){border-radius:28px 12px 28px 12px}.stat:nth-child(4){border-radius:12px 28px 12px 28px}
+.stat-ic{width:44px;height:44px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;background:var(--ib,var(--pc));color:var(--ic,var(--onpc))}
+.stat-b{display:flex;flex-direction:column;min-width:0}
+.stat .l{font-size:12px;color:var(--onv);white-space:nowrap}
+.stat .v{font-size:1.6rem;line-height:1.15;font-variation-settings:"wght" 700,"wdth" 118,"ROND" 100}
+
+/* Tableau */
+.tcard{background:var(--c1);border-radius:28px;overflow-x:clip}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem}
+thead{position:sticky;top:calc(var(--bar) + env(safe-area-inset-top,0px));z-index:60}
+th{background:var(--c3);color:var(--onv);font-size:12px;padding:0 16px;height:52px;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;
+ font-variation-settings:"wght" 560,"wdth" 90,"ROND" 100}
+th:first-child{border-top-left-radius:28px}th:last-child{border-top-right-radius:28px}
+th:hover{color:var(--on)}th.ns{cursor:default}
+.si{margin-left:4px;font-size:14px;opacity:.4}.si.active{opacity:1;color:var(--p)}
+td{padding:0 16px;height:60px;border-bottom:1px solid var(--outv);vertical-align:middle}
+tbody tr{transition:background .15s;cursor:pointer}
+tbody tr:hover td{background:var(--c2)}
+tbody tr.selected td{background:var(--pc)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.in{animation:up .3s ease backwards}
+.chip{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:10px;font-size:12px;white-space:nowrap;font-variation-settings:"wght" 560,"wdth" 95,"ROND" 100}
+.chip.ok{background:var(--okc);color:var(--ok)}.chip.ko{background:var(--errc);color:var(--err)}
+.zc,.ec{display:flex;align-items:center;gap:6px}
+.zd{width:12px;height:12px;border-radius:50%;display:inline-block;flex-shrink:0}
+.av{width:30px;height:30px;border-radius:10px;background:var(--pc);color:var(--onpc);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-variation-settings:"wght" 700}
+.idc{color:var(--p);font-variation-settings:"wght" 600,"wdth" 75}
+.suf{color:var(--onv);font-variation-settings:"wght" 300,"wdth" 80}
+.cnt{font-variation-settings:"wght" 300,"wdth" 75}
+.mut{color:var(--onv)}.id-suf{display:none}
+.empty{text-align:center;padding:64px 24px;color:var(--onv)}
+.empty .ei{width:80px;height:80px;margin:0 auto 16px;font-size:2rem;background:var(--c3);color:var(--p);border-radius:30% 70% 70% 30%/30% 30% 70% 70%;display:flex;align-items:center;justify-content:center}
+.empty p{margin:0 0 4px;color:var(--on);font-size:1.1rem}
+
 /* Modal */
-#myModal{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:1050;display:flex;align-items:center;justify-content:center;padding:1rem;
-    opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s,background .25s,visibility 0s linear .25s,backdrop-filter .25s}
-#myModal.open{background:rgba(6,6,16,.68);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:1;visibility:visible;
-    pointer-events:auto;transition:opacity .25s,background .25s,visibility 0s,backdrop-filter .25s}
-.modal-box{background:linear-gradient(180deg,rgba(39,39,68,.92),rgba(28,28,48,.94));backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-    border:1px solid var(--glass-border);border-radius:20px;padding:1.85rem;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;
-    box-shadow:0 26px 70px rgba(0,0,0,.5);transform:scale(.94) translateY(14px);opacity:0;transition:transform .3s var(--ease-spring),opacity .2s}
-#myModal.open .modal-box{transform:none;opacity:1}
-.modal-header-custom{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
-.modal-header-custom h5{font-size:1.05rem;font-weight:600;margin:0;color:var(--red-soft);display:flex;align-items:center;gap:9px;
-    font-variation-settings:"wght" 600,"wdth" 105,"GRAD" 0,"ROND" 10,"slnt" -6}
-.modal-header-custom h5 i{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:.95rem;
-    background:linear-gradient(135deg,rgba(226,0,26,.3),rgba(226,0,26,.1));border:1px solid rgba(226,0,26,.28)}
-.modal-close{background:var(--glass);border:1px solid var(--glass-border-soft);color:var(--text);cursor:pointer;border-radius:9px;
-    width:34px;height:34px;display:flex;align-items:center;justify-content:center;transition:background .18s,border-color .18s,transform .15s}
-.modal-close:hover{background:rgba(226,0,26,.18);border-color:rgba(226,0,26,.4);transform:rotate(90deg)}
-.form-label-sm{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px;display:block;
-    font-variation-settings:"wght" 480,"wdth" 84,"GRAD" 0,"ROND" 30,"slnt" 0}
-.form-group{margin-bottom:1.05rem}
-.modal-actions{display:flex;gap:.75rem;margin-top:1.5rem;padding-top:1.1rem;border-top:1px solid var(--glass-border-soft)}
-input.form-control,.custom-select-btn{background:var(--glass);border:1px solid var(--glass-border-soft);border-radius:var(--radius-sm);
-    font-size:.875rem;color:#fff;padding:.6rem .9rem;width:100%;font-family:var(--gsf);transition:border-color .15s,background .15s}
-input.form-control:focus,.custom-select-btn:focus{outline:none;border-color:var(--red);background:var(--glass-strong)}
-input.form-control:disabled,.custom-select-btn.disabled-field{opacity:.5;cursor:not-allowed}
-input.form-control.field-error,.custom-select-btn.field-error{border-color:var(--red);background:rgba(226,0,26,.12);animation:shake .3s}
-#idWrapper{display:flex;align-items:center;border:1px solid var(--glass-border-soft);border-radius:var(--radius-sm);overflow:hidden;background:var(--glass)}
-#idPrefixSpan{padding:.6rem .75rem;color:var(--text-muted);background:rgba(255,255,255,.04);border-right:1px solid var(--glass-border-soft);white-space:nowrap}
-#mIdSuffix{border:none;outline:none;flex:1;min-width:0;padding:.6rem .9rem;color:#fff;background:transparent}
-.btn-save,.btn-delete,.btn-cancel{display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;
-    border-radius:var(--radius-sm);transition:background .18s,transform .12s,box-shadow .18s,border-color .18s;
-    font-variation-settings:"wght" 560,"wdth" 92,"GRAD" 0,"ROND" 40,"slnt" 0}
-.btn-save:active,.btn-delete:active,.btn-cancel:active{transform:scale(.96)}
-.btn-save{background:linear-gradient(135deg,var(--red),#ff3b4e);color:#fff;border:none;padding:.65rem 1.25rem;font-weight:700;flex:1;
-    box-shadow:0 4px 18px rgba(226,0,26,.32)}
-.btn-save:hover{box-shadow:0 6px 24px rgba(226,0,26,.48);transform:translateY(-1px)}
-.btn-delete{background:rgba(181,0,21,.16);color:#ef9a9a;border:1px solid rgba(239,154,154,.28);padding:.65rem 1.25rem}
-.btn-delete:hover{background:rgba(181,0,21,.28);border-color:rgba(239,154,154,.45)}
-.btn-cancel{background:var(--glass);color:var(--text);border:1px solid var(--glass-border-soft);padding:.65rem 1.1rem}
-.btn-cancel:hover{background:var(--glass-strong)}
-.custom-select-wrap{position:relative}
-.custom-select-btn{cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;user-select:none}
-.custom-select-btn.placeholder{color:var(--text-muted)}
-.custom-select-btn .chevron{font-size:14px;opacity:.5;transition:transform .2s}
-.custom-select-btn.open .chevron{transform:rotate(180deg)}
-.custom-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:linear-gradient(180deg,rgba(42,42,72,.95),rgba(30,30,52,.97));
-    backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--glass-border);border-radius:12px;z-index:2000;
-    max-height:220px;overflow-y:auto;padding:5px;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .18s,transform .18s;
-    box-shadow:0 16px 40px rgba(0,0,0,.4)}
-.custom-dropdown.open{opacity:1;transform:none;pointer-events:auto}
-.custom-dropdown-item{padding:.55rem .85rem;font-size:.875rem;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .12s}
-.custom-dropdown-item:hover{background:rgba(255,255,255,.1)}
-.custom-dropdown-item.selected{background:rgba(226,0,26,.22);color:#ff9aa6}
-.suffix-display{background:var(--glass);border:1px solid var(--glass-border-soft);border-radius:10px;padding:.6rem .9rem;
-    font-family:monospace;font-size:.95rem;color:var(--red-soft);font-weight:700}
-.toggle-group{display:flex;border:1px solid var(--glass-border-soft);border-radius:var(--radius-sm);overflow:hidden;background:var(--glass)}
-.toggle-group input[type=radio]{display:none}
-.toggle-group label{flex:1;text-align:center;padding:.55rem;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--text-muted);
-    transition:background .18s,color .18s;display:flex;align-items:center;justify-content:center;gap:5px}
-#fOui:checked + label{background:rgba(46,125,50,.28);color:#a5d6a7}
-#fNon:checked + label{background:rgba(181,0,21,.28);color:#ef9a9a}
-.toggle-group.field-error{border-color:var(--red)}
-.row-2col{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+#myModal{position:fixed;inset:0;z-index:1050;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;padding:16px;
+ visibility:hidden;pointer-events:none;transition:background .25s,visibility 0s linear .3s}
+#myModal.open{background:rgba(0,0,0,.55);visibility:visible;pointer-events:auto;transition:background .25s,visibility 0s}
+.sheet{width:100%;max-width:520px;max-height:calc(100dvh - 32px);overflow-y:auto;background:var(--c2);border-radius:28px;padding:24px;
+ transform:scale(.92) translateY(16px);opacity:0;transition:transform .35s var(--spring),opacity .2s;overscroll-behavior:contain}
+#myModal.open .sheet{transform:none;opacity:1}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.sh h5{margin:0;font-size:1.3rem;display:flex;align-items:center;gap:10px;font-variation-settings:"wght" 560,"wdth" 108,"ROND" 100}
+.lab{font-size:12px;color:var(--onv);margin:0 0 6px 4px;display:block}
+.fg{margin-bottom:16px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input.fc,.csb,.sufd,#idWrap,.tg{height:var(--ctl);border-radius:16px;background:var(--c3);border:2px solid transparent;font-size:.95rem;width:100%}
+input.fc,.csb{padding:0 16px}
+input.fc:focus,.csb:focus,#idWrap:focus-within{outline:0;border-color:var(--p);background:var(--c4)}
+input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
+.fe{border-color:var(--err)!important;animation:shake .3s}
+#idWrap{display:flex;align-items:center;overflow:hidden}
+#idPre{padding:0 12px 0 16px;color:var(--onv);white-space:nowrap}
+#mIdSuffix{border:0;outline:0;background:transparent;flex:1;min-width:0;height:100%;padding:0 16px 0 0;font-size:.95rem}
+.sufd{display:flex;align-items:center;padding:0 16px;font-family:monospace;color:var(--p);font-size:1rem}
+.err{font-size:12px;color:var(--err);margin:6px 0 0 4px;display:none}
+.csw{position:relative}
+.csb{cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px;user-select:none;min-width:0}
+.csb>span{display:flex;align-items:center;gap:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.csb.ph{color:var(--onv)}.csb .chev{opacity:.6;transition:transform .2s}.csb.open .chev{transform:rotate(180deg)}
+.dd{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:2000;background:var(--c4);border-radius:16px;max-height:240px;overflow-y:auto;padding:6px;
+ opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .18s,transform .18s;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.dd.open{opacity:1;transform:none;pointer-events:auto}
+.di{min-height:44px;padding:0 12px;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:.92rem}
+.di:hover{background:var(--c3)}.di.selected{background:var(--pc);color:var(--onpc)}
+.tg{display:flex;padding:4px;gap:4px}
+.tg input{display:none}
+.tg label{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:12px;cursor:pointer;color:var(--onv);font-size:.88rem;transition:background .2s,border-radius .25s var(--spring)}
+#fOui:checked+label{background:var(--okc);color:var(--ok);border-radius:20px}
+#fNon:checked+label{background:var(--errc);color:var(--err);border-radius:20px}
+.tg.fe{border-color:var(--err)}
+.acts{display:flex;gap:8px;margin-top:24px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.acts .fill{flex:1}
 
-/* Responsive : textes réduits puis masqués */
-@media(max-width:1100px){.text-collapse{display:none}}
-@media(max-width:900px){
-.lbl,.lbl-title{display:none}
-.page-header{gap:.5rem;padding-right:.75rem}
-.page-header h1{font-size:.95rem}
-.toolbar-btn,.btn-add{padding:.5rem .68rem}
-.search-wrap{width:36px}
-.search-wrap:focus-within{width:180px}
-.search-input{width:0;padding:0}
-.search-wrap:focus-within .search-input{width:140px;padding:6px 8px}
-.stats-bar{gap:.6rem}
-.stat-card{min-width:0;flex:1 1 calc(33% - .6rem);padding:.75rem .9rem;gap:.6rem}
-.stat-icon{width:34px;height:34px;font-size:1rem;border-radius:10px}
-.stat-card .value{font-size:1.2rem}
-}
-@media(max-width:640px){
-:root{--header-h:58px}
-.page-header{height:calc(58px + env(safe-area-inset-top,0px))}
-.header-svg-wrap{height:58px}
-.content-area{padding:.8rem}
-.stat-card{flex:1 1 calc(50% - .6rem)}
-.stat-card .label{font-size:9px}
-.modal-box{padding:1.3rem;border-radius:20px 20px 0 0;max-height:88vh}
-#myModal{align-items:flex-end;padding:0}
-.modal-box{max-width:100%;transform:translateY(100%)}
-.modal-box::before{content:"";display:block;width:40px;height:4px;border-radius:4px;background:var(--glass-border);margin:0 auto 1.1rem}
-#myModal.open .modal-box{transform:translateY(0)}
-.row-2col{grid-template-columns:1fr}
-.form-label-sm{font-size:10px}
-input.form-control,.custom-select-btn{font-size:.8rem}
-
-/* Mode recherche : le numéro se réduit au suffixe */
-body.searching .id-full{display:none}
-body.searching .id-suf{display:inline}
-body.searching th:nth-child(2),body.searching td:nth-child(2){display:none}
-
-/* Table -> cartes glass empilées */
-.table-card{background:transparent;border:none;box-shadow:none;overflow:visible}
-.table-card table,.table-card thead,.table-card tbody,.table-card tr,.table-card th,.table-card td{display:block}
-.table-card thead{display:none}
-.table-card tbody tr{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-    border:1px solid var(--glass-border-soft);border-radius:16px;margin-bottom:.7rem;padding:.35rem .95rem;
-    box-shadow:0 4px 22px rgba(0,0,0,.2)}
-.table-card tbody tr.selected{border-color:rgba(226,0,26,.5);background:rgba(226,0,26,.12)}
-.table-card tbody td{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem 0;
-    border-bottom:1px dashed var(--glass-border-soft);background:none!important}
-.table-card tbody tr:last-child td{border-bottom:1px dashed var(--glass-border-soft)}
-.table-card tbody td:last-child{border-bottom:none;justify-content:center;padding-top:.55rem}
-.table-card tbody td::before{content:attr(data-label);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
-    color:var(--text-dim);flex-shrink:0}
-.table-card tbody td:last-child::before{content:none}
-.table-card tbody td:last-child .btn-edit{width:100%;justify-content:center;padding:.6rem}
-.badge-format,.badge-etat{font-size:10.5px;padding:4px 10px}
+/* Responsive */
+@media(max-width:1100px){.tc{display:none}}
+@media(max-width:900px){.lbl{display:none}}
+@media(max-width:720px){
+ :root{--bar:56px}
+ .logo{height:38px}.bar h1{font-size:1.1rem}
+ main{padding:0 12px 96px}
+ .stats{grid-template-columns:1fr 1fr}
+ .stat{height:72px;padding:0 12px;gap:10px;border-radius:24px!important}
+ .stat-ic{width:38px;height:38px;font-size:1.15rem}.stat .v{font-size:1.35rem}.stat .l{font-size:11px}
+ .fab{height:56px;padding:0 20px 0 16px}
+ #myModal{align-items:flex-end;padding:0}
+ .sheet{max-width:100%;border-radius:28px 28px 0 0;max-height:92dvh;padding:12px 16px 16px;transform:translateY(100%)}
+ .sheet::before{content:"";display:block;width:32px;height:4px;border-radius:2px;background:var(--out);margin:0 auto 12px}
+ .row2{grid-template-columns:1fr}
+ .tcard{background:none;border-radius:0}
+ table,thead,tbody,tr,th,td{display:block}thead{display:none}
+ tbody tr{background:var(--c2);border-radius:24px;margin-bottom:8px;padding:4px 16px}
+ tbody tr.selected{background:var(--pc)}
+ tbody tr.selected td{background:none}
+ td{display:flex;align-items:center;justify-content:space-between;gap:12px;height:auto;min-height:48px;padding:6px 0;border-bottom:1px dashed var(--outv)}
+ tbody tr:hover td{background:none}
+ td::before{content:attr(data-label);font-size:12px;color:var(--onv);flex-shrink:0}
+ td:last-child{border-bottom:0;padding:8px 0 6px}td:last-child::before{content:none}
+ td:last-child .btn{width:100%;height:48px}
+ body.searching .id-full{display:none}body.searching .id-suf{display:inline}
+ body.searching td:nth-child(2),body.searching td:nth-child(2){display:none}
 }
 </style>
 </head>
 <body class="locked">
 
-<div id="lockScreen">
-    <div class="lock-box">
-        <div class="lock-icon-wrap"><i class="ti ti-lock lock-icon"></i></div>
-        <h2>Accès protégé</h2>
-        <input type="password" id="lockPass" class="form-control" placeholder="Mot de passe" autocomplete="current-password" onkeydown="if(event.key==='Enter')tenterMotDePasse()">
-        <button class="btn-save" id="lockBtn" onclick="tenterMotDePasse()"><i class="ti ti-lock-open"></i> Déverrouiller</button>
-        <div class="lock-sep">ou</div>
-        <button class="btn-cancel" onclick="scannerNFC()"><i class="ti ti-nfc"></i> Carte NFC</button>
-        <div id="lockMsg"></div>
-    </div>
-</div>
+<div id="lockScreen"><div class="lock-box">
+ <div class="lock-ic"><i class="ti ti-lock"></i></div>
+ <h2>Accès protégé</h2>
+ <input type="password" id="lockPass" class="fc" placeholder="Mot de passe" autocomplete="current-password" onkeydown="if(event.key==='Enter')tenterMotDePasse()">
+ <button class="btn fill" id="lockBtn" onclick="tenterMotDePasse()"><i class="ti ti-lock-open"></i> Déverrouiller</button>
+ <div class="lock-sep">ou</div>
+ <button class="btn" onclick="scannerNFC()"><i class="ti ti-nfc"></i> Carte NFC</button>
+ <div id="lockMsg"></div>
+</div></div>
 
-<div class="page-header">
-    <div class="header-svg-wrap">
-        <svg viewBox="0 0 804 398" xmlns="http://www.w3.org/2000/svg" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2">
-            <g transform="matrix(1,0,0,1,-1185.232032,-1281.990164)">
-                <g transform="matrix(0,1,-2.243502,0,3848.40344,315.149584)">
-                    <path d="M1363.977,918.157L1363.977,1098.552C1363.977,1122.026 1343.056,1144.538 1305.817,1161.137C1268.579,1177.735 1218.072,1187.06 1165.409,1187.06C1055.743,1187.06 966.841,1147.434 966.841,1098.552L966.841,918.157L1165.409,828.781L1363.977,918.157Z" style="fill:rgba(255,255,255,0.15)"/>
-                </g>
-                <g transform="matrix(0.173485,0,0,0.173433,712.57317,1394.882698)">
-                    <path d="M5373,234L5384,390L4904,391C4847,391 4801,436 4801,493C4802,552 4848,598 4905,598L5385,597L5374,754C5287,895 5132,988 4953,988C4682,988 4460,767 4460,493C4460,444 4468,395 4482,350L4327,350L4328,954L3936,954L3935,350L3698,350L3698,35L4564,35L4564,190C4654,74 4795,0 4953,0C5132,0 5287,93 5373,234ZM5374,754L5615,494L5373,234L5373,35L5782,35L5783,623L6137,623L6138,953L5374,954L5374,754Z" style="fill:white"/>
-                </g>
-            </g>
-        </svg>
-    </div>
-    <h1><i class="ti ti-ticket" style="margin-right:8px"></i><span class="lbl-title">Gestion des tickets</span></h1>
-    <div id="syncStatus" class="sync-status idle"><i class="ti ti-cloud"></i> <span class="lbl">Synchronisé</span></div>
-    <div class="search-wrap">
-        <button class="search-icon-btn" onclick="$('searchInput').focus()" tabindex="-1" aria-label="Rechercher"><i class="ti ti-search"></i></button>
-        <input type="search" id="searchInput" class="search-input" placeholder="Suffixe, contenu…">
-    </div>
-    <button class="toolbar-btn" onclick="exporterJSON()" title="Exporter"><i class="ti ti-download"></i><span class="lbl"> Exporter</span></button>
-    <button class="toolbar-btn" onclick="$('importFile').click()" title="Importer"><i class="ti ti-upload"></i><span class="lbl"> Importer</span></button>
-    <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importerJSON(this.files[0])">
-    <button class="btn-add" onclick="ouvrirModal()" title="Ajouter un ticket"><i class="ti ti-plus"></i><span class="lbl"> Ajouter un ticket</span></button>
-</div>
+<header class="bar">
+ <div class="logo"><svg viewBox="0 0 804 398" xmlns="http://www.w3.org/2000/svg" style="fill-rule:evenodd;clip-rule:evenodd"><g transform="matrix(1,0,0,1,-1185.232032,-1281.990164)"><g transform="matrix(0,1,-2.243502,0,3848.40344,315.149584)"><path d="M1363.977,918.157L1363.977,1098.552C1363.977,1122.026 1343.056,1144.538 1305.817,1161.137C1268.579,1177.735 1218.072,1187.06 1165.409,1187.06C1055.743,1187.06 966.841,1147.434 966.841,1098.552L966.841,918.157L1165.409,828.781L1363.977,918.157Z" style="fill:#e2001a"/></g><g transform="matrix(0.173485,0,0,0.173433,712.57317,1394.882698)"><path d="M5373,234L5384,390L4904,391C4847,391 4801,436 4801,493C4802,552 4848,598 4905,598L5385,597L5374,754C5287,895 5132,988 4953,988C4682,988 4460,767 4460,493C4460,444 4468,395 4482,350L4327,350L4328,954L3936,954L3935,350L3698,350L3698,35L4564,35L4564,190C4654,74 4795,0 4953,0C5132,0 5287,93 5373,234ZM5374,754L5615,494L5373,234L5373,35L5782,35L5783,623L6137,623L6138,953L5374,954L5374,754Z" style="fill:#fff"/></g></g></svg></div>
+ <h1>Tickets</h1>
+ <span class="sp"></span>
+ <div id="syncStatus" class="sync"><i class="ti ti-cloud"></i><span class="lbl">Synchronisé</span></div>
+ <button class="ibtn" onclick="exporterJSON()" title="Exporter" aria-label="Exporter"><i class="ti ti-download"></i></button>
+ <button class="ibtn" onclick="$('importFile').click()" title="Importer" aria-label="Importer"><i class="ti ti-upload"></i></button>
+ <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importerJSON(this.files[0])">
+</header>
 
-<div class="content-area">
-    <div class="stats-bar" id="statsBar"></div>
-    <div class="table-card">
-        <table style="width:100%">
-            <thead><tr>
-                <th onclick="sortBy('id')">ID complet <i class="ti ti-arrows-sort sort-icon" data-col="id"></i></th>
-                <th onclick="sortBy('suffixe')">Suffixe <i class="ti ti-arrows-sort sort-icon" data-col="suffixe"></i></th>
-                <th onclick="sortBy('format')">Format <i class="ti ti-arrows-sort sort-icon" data-col="format"></i></th>
-                <th onclick="sortBy('contenu')">Contenu <i class="ti ti-arrows-sort sort-icon" data-col="contenu"></i></th>
-                <th onclick="sortBy('zones')">Zones <i class="ti ti-arrows-sort sort-icon" data-col="zones"></i></th>
-                <th onclick="sortBy('quantite')">Qté <i class="ti ti-arrows-sort sort-icon" data-col="quantite"></i></th>
-                <th onclick="sortBy('emprunteur')">Emprunteur <i class="ti ti-arrows-sort sort-icon" data-col="emprunteur"></i></th>
-                <th onclick="sortBy('fonctionnel')">Fonctionnel <i class="ti ti-arrows-sort sort-icon" data-col="fonctionnel"></i></th>
-                <th class="no-sort"></th>
-            </tr></thead>
-            <tbody id="ticketBody"></tbody>
-        </table>
-        <div id="emptyState" class="empty-state" style="display:none">
-            <div class="empty-icon"><i class="ti ti-ticket-off"></i></div>
-            <p>Aucun ticket enregistré.</p>
-            <span class="empty-sub">Ajoutez votre premier ticket avec le bouton en haut à droite.</span>
-        </div>
-    </div>
-</div>
+<main>
+ <label class="search"><i class="ti ti-search"></i><input type="search" id="searchInput" placeholder="Rechercher un suffixe, un contenu…"></label>
+ <div class="stats" id="statsBar"></div>
+ <div class="tcard">
+  <table>
+   <thead><tr>
+    <th onclick="sortBy('id')">ID complet <i class="ti ti-arrows-sort si" data-col="id"></i></th>
+    <th onclick="sortBy('suffixe')">Suffixe <i class="ti ti-arrows-sort si" data-col="suffixe"></i></th>
+    <th onclick="sortBy('format')">Format <i class="ti ti-arrows-sort si" data-col="format"></i></th>
+    <th onclick="sortBy('contenu')">Contenu <i class="ti ti-arrows-sort si" data-col="contenu"></i></th>
+    <th onclick="sortBy('zones')">Zones <i class="ti ti-arrows-sort si" data-col="zones"></i></th>
+    <th onclick="sortBy('quantite')">Qté <i class="ti ti-arrows-sort si" data-col="quantite"></i></th>
+    <th onclick="sortBy('emprunteur')">Emprunteur <i class="ti ti-arrows-sort si" data-col="emprunteur"></i></th>
+    <th onclick="sortBy('fonctionnel')">État <i class="ti ti-arrows-sort si" data-col="fonctionnel"></i></th>
+    <th onclick="sortBy('ajoute')">Ajouté le <i class="ti ti-arrows-sort si" data-col="ajoute"></i></th>
+    <th class="ns"></th>
+   </tr></thead>
+   <tbody id="ticketBody"></tbody>
+  </table>
+  <div id="emptyState" class="empty" style="display:none">
+   <div class="ei"><i class="ti ti-ticket-off"></i></div>
+   <p>Aucun ticket enregistré</p><span class="mut">Ajoutez votre premier ticket avec le bouton +.</span>
+  </div>
+ </div>
+</main>
 
-<div id="myModal">
-    <div class="modal-box">
-        <div class="modal-header-custom">
-            <h5 id="modalTitle"><i class="ti ti-ticket"></i> Nouveau ticket</h5>
-            <button class="modal-close" onclick="fermerModal()" aria-label="Fermer"><i class="ti ti-x"></i></button>
-        </div>
-        <input type="hidden" id="editIndex">
+<button class="fab" onclick="ouvrirModal()" aria-label="Ajouter un ticket"><i class="ti ti-plus"></i><span>Ajouter</span></button>
 
-        <div class="form-group">
-            <label class="form-label-sm">Numéro de ticket <span id="idCounter" style="font-weight:400;letter-spacing:0;text-transform:none">(0/12 chiffres)</span></label>
-            <div id="idWrapper">
-                <span id="idPrefixSpan">06-14988599</span>
-                <input type="text" id="mIdSuffix" placeholder="000000000000" maxlength="12" inputmode="numeric" oninput="onIdInput(this)">
-            </div>
-            <input type="hidden" id="mId">
-            <div id="idError" style="font-size:11px;color:#ff8a8a;margin-top:6px;display:none"></div>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label-sm">Suffixe (caractères 18–23)</label>
-            <div class="suffix-display" id="mSuffixeDisplay">—</div>
-            <input type="hidden" id="mSuffixe">
-        </div>
-
-        <div class="row-2col">
-            <div class="form-group">
-                <label class="form-label-sm">Contenu</label>
-                <div class="custom-select-wrap">
-                    <button type="button" class="custom-select-btn placeholder" id="btnContenu" onclick="toggleDropdown('Contenu')"><span id="lblContenu">Sélectionner…</span><i class="ti ti-chevron-down chevron"></i></button>
-                    <div class="custom-dropdown" id="dropContenu"></div>
-                    <input type="hidden" id="mContenu">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label-sm">Format</label>
-                <div class="custom-select-wrap">
-                    <button type="button" class="custom-select-btn placeholder" id="btnFormat" onclick="toggleDropdown('Format')"><span id="lblFormat">Sélectionner…</span><i class="ti ti-chevron-down chevron"></i></button>
-                    <div class="custom-dropdown" id="dropFormat"></div>
-                    <input type="hidden" id="mFormat">
-                </div>
-            </div>
-        </div>
-
-        <div class="row-2col">
-            <div class="form-group">
-                <label class="form-label-sm">Zones</label>
-                <div class="custom-select-wrap">
-                    <button type="button" class="custom-select-btn placeholder" id="btnZones" onclick="toggleDropdown('Zones')"><span id="lblZones">Sélectionner…</span><i class="ti ti-chevron-down chevron"></i></button>
-                    <div class="custom-dropdown" id="dropZones"></div>
-                    <input type="hidden" id="mZones">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label-sm">Quantité</label>
-                <input type="number" id="mQte" placeholder="ex. 10" class="form-control" min="1" inputmode="numeric">
-                <div id="qteError" style="font-size:11px;color:#ff8a8a;margin-top:6px;display:none">Quantité requise</div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label-sm">Emprunteur</label>
-            <input type="text" id="mEmp" placeholder="— si non emprunté" class="form-control">
-        </div>
-
-        <div class="form-group">
-            <label class="form-label-sm">Fonctionnel</label>
-            <div class="toggle-group" id="toggleGroup">
-                <input type="radio" name="mFonctionnel" id="fOui" value="oui">
-                <label for="fOui"><i class="ti ti-check"></i> Fonctionnel</label>
-                <input type="radio" name="mFonctionnel" id="fNon" value="non">
-                <label for="fNon"><i class="ti ti-x"></i> Non fonctionnel</label>
-            </div>
-            <div id="foncError" style="font-size:11px;color:#ff8a8a;margin-top:6px;display:none">Veuillez sélectionner une option</div>
-        </div>
-
-        <div class="modal-actions">
-            <button class="btn-save" onclick="sauvegarder()"><i class="ti ti-device-floppy"></i> Enregistrer</button>
-            <button id="btnSupp" class="btn-delete" onclick="confirmerSuppression(event)" style="display:none"><i class="ti ti-trash"></i> Supprimer</button>
-            <button class="btn-cancel" onclick="fermerModal()">Annuler</button>
-        </div>
-    </div>
-</div>
+<div id="myModal"><div class="sheet">
+ <div class="sh">
+  <h5 id="modalTitle"><i class="ti ti-ticket"></i> Nouveau ticket</h5>
+  <button class="ibtn" onclick="fermerModal()" aria-label="Fermer"><i class="ti ti-x"></i></button>
+ </div>
+ <input type="hidden" id="editIndex">
+ <div class="fg">
+  <label class="lab">Numéro de ticket <span id="idCounter">(0/12 chiffres)</span></label>
+  <div id="idWrap"><span id="idPre">06-14988599</span><input type="text" id="mIdSuffix" placeholder="000000000000" maxlength="12" inputmode="numeric" oninput="onIdInput(this)"></div>
+  <input type="hidden" id="mId"><div id="idError" class="err"></div>
+ </div>
+ <div class="fg">
+  <label class="lab">Suffixe (caractères 18–23)</label>
+  <div class="sufd" id="mSuffixeDisplay">—</div><input type="hidden" id="mSuffixe">
+ </div>
+ <div class="row2">
+  <div class="fg"><label class="lab">Contenu</label><div class="csw">
+   <button type="button" class="csb ph" id="btnContenu" onclick="toggleDropdown('Contenu')"><span id="lblContenu">Sélectionner…</span><i class="ti ti-chevron-down chev"></i></button>
+   <div class="dd" id="dropContenu"></div><input type="hidden" id="mContenu"></div></div>
+  <div class="fg"><label class="lab">Format</label><div class="csw">
+   <button type="button" class="csb ph" id="btnFormat" onclick="toggleDropdown('Format')"><span id="lblFormat">Sélectionner…</span><i class="ti ti-chevron-down chev"></i></button>
+   <div class="dd" id="dropFormat"></div><input type="hidden" id="mFormat"></div></div>
+ </div>
+ <div class="row2">
+  <div class="fg"><label class="lab">Zones</label><div class="csw">
+   <button type="button" class="csb ph" id="btnZones" onclick="toggleDropdown('Zones')"><span id="lblZones">Sélectionner…</span><i class="ti ti-chevron-down chev"></i></button>
+   <div class="dd" id="dropZones"></div><input type="hidden" id="mZones"></div></div>
+  <div class="fg"><label class="lab">Quantité</label>
+   <input type="number" id="mQte" placeholder="ex. 10" class="fc" min="1" inputmode="numeric">
+   <div id="qteError" class="err">Quantité requise</div></div>
+ </div>
+ <div class="fg"><label class="lab">Emprunteur</label><input type="text" id="mEmp" placeholder="— si non emprunté" class="fc"></div>
+ <div class="fg"><label class="lab">État</label>
+  <div class="tg" id="toggleGroup">
+   <input type="radio" name="mFonctionnel" id="fOui" value="oui"><label for="fOui"><i class="ti ti-check"></i> Fonctionnel</label>
+   <input type="radio" name="mFonctionnel" id="fNon" value="non"><label for="fNon"><i class="ti ti-x"></i> Non fonctionnel</label>
+  </div>
+  <div id="foncError" class="err">Veuillez sélectionner une option</div>
+ </div>
+ <div class="mut" id="dateInfo" style="font-size:12px;margin:-4px 0 0 4px;display:none"></div>
+ <div class="acts">
+  <button class="btn fill" onclick="sauvegarder()"><i class="ti ti-device-floppy"></i> Enregistrer</button>
+  <button id="btnSupp" class="btn danger" onclick="confirmerSuppression(event)" style="display:none" aria-label="Supprimer"><i class="ti ti-trash"></i></button>
+  <button class="btn" onclick="fermerModal()">Annuler</button>
+ </div>
+</div></div>
 
 <script>
 const API_URL='https://api.npoint.io/31ba31f685940c724c54', PREFIX='06-14988599', VAR_LEN=12;
 let tickets=[], sortColumn='id', sortDirection='asc', statsInit=false, firstRender=true;
 const $=id=>document.getElementById(id);
 
-/* ---------- Tarifs TCL (€) : [Zones 1-2, 2 zones voisines, Toutes zones sauf Z1, Toutes zones] ----------
-   Titres à voyages : prix PAR VOYAGE. Passes et titres à prix fixe : prix du titre. */
+/* Tarifs TCL (€) : [Zones 1-2, 2 zones voisines, Toutes zones sauf Z1, Toutes zones]. Titres à voyages : prix PAR VOYAGE. */
 const D=(a,n)=>a.map(v=>+(v/n).toFixed(4)), F=v=>[v,v,v,v];
 const PRIX={
  '1 voyage':[2.1,1.6,2.5,3.7], '1 voyage à bord':[2.6,1.8,2.7,3.9],
@@ -464,14 +304,15 @@ const PRIX={
  'Pass TCL en fête':F(3.7), 'Pass Pic Pollution':[3.5,4.5,4.5,4.5]
 };
 const zcol=z=>z==='Z1 & 2'?0:z==='Toutes zones sauf Z1'?2:z==='Toutes zones'?3:(z&&z!=='—')?1:-1;
-const SUPPORT_PRIX=0.2; // valeur du support physique (hors HS), ajoutée à tout ticket fonctionnel
+const SUPPORT_PRIX=0.2;
 function gain(t){
     if(t.fonctionnel!=='oui')return 0;
     const q=parseInt(t.quantite,10), p=PRIX[t.contenu], c=zcol(t.zones);
-    const contenuVal=(p&&q>0&&c>=0)?q*p[c]:0;
-    return contenuVal+SUPPORT_PRIX;
+    return ((p&&q>0&&c>=0)?q*p[c]:0)+SUPPORT_PRIX;
 }
 const eur=n=>n.toLocaleString('fr-FR',{style:'currency',currency:'EUR'});
+const fmtDate=iso=>{const d=iso&&new Date(iso);return d&&!isNaN(d)?d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}):'—';};
+const fmtDateHeure=iso=>{const d=iso&&new Date(iso);return d&&!isNaN(d)?d.toLocaleString('fr-FR',{dateStyle:'long',timeStyle:'short'}):'';};
 
 const DROPDOWN_DATA={
  Contenu:['Vide','Inconnu','1 voyage','1 voyage à bord','10 voyages','10 voyages (-26 ans/étudiants)','10 voyages famille nombreuse','Pass 24h','Pass 48h','Pass 72h','Pass 7 jours','Pass tribu','Groupe 10 personnes','Aller simple Navigône','Aller-retour Navigône','Aller-retour Funiculaire','Pass TCL en fête','Pass Pic Pollution'],
@@ -479,18 +320,19 @@ const DROPDOWN_DATA={
  Zones:[{v:'Z1 & 2',dots:['#E2001A','#e07b00']},{v:'Z2 & 3',dots:['#e07b00','#2e7d32']},{v:'Z3 & 4',dots:['#2e7d32','#1a56c4']},{v:'Z4 & 5',dots:['#1a56c4','#e91e8c']},{v:'Z2 & EXT',dots:['#e07b00','#f5c518']},{v:'Z3 & EXT',dots:['#2e7d32','#f5c518']},{v:'Z4 & EXT',dots:['#1a56c4','#f5c518']},{v:'Z5 & EXT',dots:['#e91e8c','#f5c518']},{v:'Toutes zones sauf Z1',dots:['#7c3aed','#E2001A']},{v:'Toutes zones',dots:['#7c3aed']}]
 };
 const ZONE_MAP=Object.fromEntries(DROPDOWN_DATA.Zones.map(z=>[z.v,z.dots]));
-const dot=c=>`<span class="zone-dot" style="background:${c}"></span>`;
+const FORMAT_COLOR=Object.fromEntries(DROPDOWN_DATA.Format.map(f=>[f.v,f.c]));
+const dot=c=>`<span class="zd" style="background:${c}"></span>`;
+const zonesDots=v=>(ZONE_MAP[v]||[]).map(dot).join('');
 
 function buildDropdowns(){
     for(const name of ['Contenu','Format','Zones']){
         const drop=$('drop'+name), frag=document.createDocumentFragment();
         const ph=document.createElement('div');
-        ph.className='custom-dropdown-item';ph.textContent='Sélectionner…';ph.style.cssText='opacity:.5;pointer-events:none';
+        ph.className='di';ph.textContent='Sélectionner…';ph.style.cssText='opacity:.5;pointer-events:none';
         frag.appendChild(ph);
         DROPDOWN_DATA[name].forEach(item=>{
             const el=document.createElement('div'), v=typeof item==='string'?item:item.v;
-            el.className='custom-dropdown-item';
-            el.onclick=()=>selectOption(name,v);
+            el.className='di';el.onclick=()=>selectOption(name,v);
             if(typeof item==='string')el.textContent=item;
             else if(name==='Format')el.innerHTML=dot(item.c)+v;
             else el.innerHTML=item.dots.map(dot).join('')+v;
@@ -499,20 +341,16 @@ function buildDropdowns(){
         drop.appendChild(frag);
     }
 }
-const zonesDots=v=>(ZONE_MAP[v]||[]).map(dot).join('');
-const FORMAT_COLOR=Object.fromEntries(DROPDOWN_DATA.Format.map(f=>[f.v,f.c]));
-const hexToRgb=h=>{h=h.replace('#','');return{r:parseInt(h.substr(0,2),16),g:parseInt(h.substr(2,2),16),b:parseInt(h.substr(4,2),16)};};
-const lighten=(c,a)=>({r:Math.round(c.r+(255-c.r)*a),g:Math.round(c.g+(255-c.g)*a),b:Math.round(c.b+(255-c.b)*a)});
-function formatBadgeStyle(v){
-    const rgb=hexToRgb(FORMAT_COLOR[v]||'#E2001A'), tl=lighten(rgb,.55);
-    return `background:linear-gradient(135deg,rgba(${rgb.r},${rgb.g},${rgb.b},.26),rgba(${rgb.r},${rgb.g},${rgb.b},.08));border-color:rgba(${rgb.r},${rgb.g},${rgb.b},.38);color:rgb(${tl.r},${tl.g},${tl.b})`;
+function formatChip(v){
+    const c=FORMAT_COLOR[v]||'#E2001A';
+    return `<span class="chip" style="background:${c}33;color:#fff;box-shadow:inset 0 0 0 1px ${c}88"><span class="zd" style="background:${c}"></span>${v||'—'}</span>`;
 }
 
 const SYNC_ICONS={idle:'ti-cloud',saving:'ti-cloud-upload',ok:'ti-cloud-check',error:'ti-cloud-x'};
 function setSync(state,msg){
     const el=$('syncStatus');
-    el.className='sync-status '+state;
-    el.innerHTML=`<i class="ti ${SYNC_ICONS[state]}"></i> <span class="lbl">${msg}</span>`;
+    el.className='sync '+state;
+    el.innerHTML=`<i class="ti ${SYNC_ICONS[state]}"></i><span class="lbl">${msg}</span>`;
 }
 
 function animateNumber(el,to){
@@ -533,23 +371,23 @@ function renderStats(){
     const nbKo=tickets.filter(t=>t.fonctionnel==='non').length;
     const eco=eur(Math.round(tickets.reduce((s,t)=>s+gain(t),0)*100)/100);
     if(!statsInit){
-        $('statsBar').innerHTML=`
-        <div class="stat-card"><div class="stat-icon" style="--icon-bg:rgba(226,0,26,.2);--icon-color:#ff8a8a"><i class="ti ti-ticket"></i></div><div class="stat-body"><div class="label">Tickets</div><div class="value" id="statTotal">0</div></div></div>
-        <div class="stat-card"><div class="stat-icon" style="--icon-bg:rgba(66,133,244,.2);--icon-color:#8ab4ff"><i class="ti ti-route"></i></div><div class="stat-body"><div class="label">Total voyages</div><div class="value" id="statVoyages">0</div></div></div>
-        <div class="stat-card"><div class="stat-icon" style="--icon-bg:rgba(46,125,50,.2);--icon-color:#a5d6a7"><i class="ti ti-check"></i></div><div class="stat-body"><div class="label">Fonctionnels</div><div class="value" id="statOk" style="color:#a5d6a7">0</div></div></div>
-        <div class="stat-card"><div class="stat-icon" style="--icon-bg:rgba(181,0,21,.2);--icon-color:#ef9a9a"><i class="ti ti-alert-triangle"></i></div><div class="stat-body"><div class="label">Non fonctionnels</div><div class="value" id="statKo" style="color:#ef9a9a">0</div></div></div>
-        <div class="stat-card"><div class="stat-icon" style="--icon-bg:rgba(46,125,50,.2);--icon-color:#a5d6a7"><i class="ti ti-wallet"></i></div><div class="stat-body"><div class="label">Économies</div><div class="value" id="statEco" style="color:#a5d6a7">0,00 €</div></div></div>`;
+        const S=(ic,l,id,v,bg,fg)=>`<div class="stat"><div class="stat-ic" style="--ib:${bg};--ic:${fg}"><i class="ti ti-${ic}"></i></div><div class="stat-b"><div class="l">${l}</div><div class="v" id="${id}">${v}</div></div></div>`;
+        $('statsBar').innerHTML=
+            S('ticket','Tickets','statTotal',0,'var(--pc)','var(--onpc)')+
+            S('route','Total voyages','statVoyages',0,'#1c3a6b','#adc6ff')+
+            S('check','Fonctionnels','statOk',0,'var(--okc)','var(--ok)')+
+            S('alert-triangle','Non fonctionnels','statKo',0,'var(--errc)','var(--err)')+
+            S('wallet','Économies','statEco','0,00 €','var(--okc)','var(--ok)');
         statsInit=true;
     }
     animateNumber($('statTotal'),tickets.length);
     animateNumber($('statVoyages'),totalQte);
     animateNumber($('statOk'),nbOk);
     animateNumber($('statKo'),nbKo);
-    const ecoEl=$('statEco');
-    if(ecoEl.textContent!==eco){ecoEl.classList.remove('flash');void ecoEl.offsetWidth;ecoEl.textContent=eco;ecoEl.classList.add('flash');}
+    $('statEco').textContent=eco;
 }
 
-/* Affichage immédiat du cache local, puis rafraîchissement depuis l'API */
+/* Cache local puis rafraîchissement depuis l'API */
 async function charger(){
     try{const c=JSON.parse(localStorage.getItem('mesTickets'));if(Array.isArray(c)){tickets=c;render();}}catch{}
     setSync('saving','Chargement…');
@@ -563,7 +401,6 @@ async function charger(){
     }catch{setSync('error','Hors ligne');}
     render();
 }
-
 async function sauvegarderAPI(){
     setSync('saving','Sauvegarde…');
     localStorage.setItem('mesTickets',JSON.stringify(tickets));
@@ -573,16 +410,12 @@ async function sauvegarderAPI(){
         setSync('ok','Synchronisé');
     }catch{setSync('error','Erreur sync');}
 }
-
 function exporterJSON(){
     const url=URL.createObjectURL(new Blob([JSON.stringify(tickets,null,2)],{type:'application/json'}));
     const a=document.createElement('a');
-    a.href=url;
-    a.download=`tickets-tcl-${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.json`;
-    document.body.appendChild(a);a.click();a.remove();
-    URL.revokeObjectURL(url);
+    a.href=url;a.download=`tickets-tcl-${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.json`;
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
-
 function importerJSON(file){
     if(!file)return;
     const reader=new FileReader();
@@ -592,9 +425,7 @@ function importerJSON(file){
         const liste=Array.isArray(data)?data:(data.data||null);
         if(!Array.isArray(liste)){alert('Format invalide.');return;}
         if(!confirm(`Écraser les ${tickets.length} ticket(s) par les ${liste.length} ticket(s) ?`))return;
-        tickets=liste;
-        await sauvegarderAPI();
-        render();
+        tickets=liste;await sauvegarderAPI();render();
     };
     reader.readAsText(file);
 }
@@ -608,7 +439,7 @@ function closeAllDropdowns(except){
 }
 function toggleDropdown(name){
     const btn=$('btn'+name), drop=$('drop'+name);
-    if(btn.classList.contains('disabled-field'))return;
+    if(btn.classList.contains('dis'))return;
     const open=drop.classList.contains('open');
     closeAllDropdowns(null);
     if(!open){drop.classList.add('open');btn.classList.add('open');}
@@ -616,11 +447,12 @@ function toggleDropdown(name){
 function selectOption(name,value){
     const lbl=$('lbl'+name), btn=$('btn'+name), drop=$('drop'+name);
     $('m'+name).value=value;
-    if(name==='Zones'&&value)lbl.innerHTML=zonesDots(value)+`<span style="margin-left:4px">${value}</span>`;
+    if(name==='Zones'&&value)lbl.innerHTML=zonesDots(value)+`<span>${value}</span>`;
+    else if(name==='Format'&&value)lbl.innerHTML=dot(FORMAT_COLOR[value]||'#E2001A')+`<span>${value}</span>`;
     else lbl.textContent=value||'Sélectionner…';
-    btn.classList.toggle('placeholder',!value);
-    btn.classList.remove('field-error');
-    drop.querySelectorAll('.custom-dropdown-item').forEach((el,i)=>{if(i)el.classList.toggle('selected',el.textContent.trim()===value&&!!value);});
+    btn.classList.toggle('ph',!value);
+    btn.classList.remove('fe');
+    drop.querySelectorAll('.di').forEach((el,i)=>{if(i)el.classList.toggle('selected',el.textContent.trim()===value&&!!value);});
     drop.classList.remove('open');btn.classList.remove('open');
     if(name==='Contenu')onContenuChange(value);
 }
@@ -628,30 +460,29 @@ const setDropdownValue=selectOption;
 function setDropdownDisabled(name,disabled,shown){
     const btn=$('btn'+name);
     if(disabled){
-        btn.classList.add('disabled-field');
+        btn.classList.add('dis');
         $('m'+name).value=shown??'—';$('lbl'+name).textContent=shown??'—';
-        btn.classList.remove('placeholder','field-error');
+        btn.classList.remove('ph','fe');
         $('drop'+name).classList.remove('open');
-    }else btn.classList.remove('disabled-field');
+    }else btn.classList.remove('dis');
 }
-document.addEventListener('click',e=>{if(!e.target.closest('.custom-select-wrap'))closeAllDropdowns(null);});
+document.addEventListener('click',e=>{if(!e.target.closest('.csw'))closeAllDropdowns(null);});
 
 function onContenuChange(value){
     if(document.querySelector('input[name="mFonctionnel"]:checked')?.value==='non')return;
     const vide=value==='Vide', inc=value==='Inconnu', q=$('mQte');
     setDropdownDisabled('Zones',vide||inc,'—');
-    if(vide){q.value='0';q.disabled=true;q.classList.remove('field-error');}
-    else if(inc){q.value='—';q.disabled=true;q.classList.remove('field-error');}
+    if(vide){q.value='0';q.disabled=true;q.classList.remove('fe');}
+    else if(inc){q.value='—';q.disabled=true;q.classList.remove('fe');}
     else{q.disabled=false;if(q.value==='0'||q.value==='—')q.value='';}
 }
-
 function setNonFoncMode(isNon){
     const q=$('mQte'), c=$('mContenu'), z=$('mZones');
-    $('toggleGroup').classList.remove('field-error');$('foncError').style.display='none';
+    $('toggleGroup').classList.remove('fe');$('foncError').style.display='none';
     if(isNon){
         c.dataset.prev=c.value;z.dataset.prev=z.value;q.dataset.prev=q.value;
         setDropdownDisabled('Contenu',true,'—');setDropdownDisabled('Zones',true,'—');
-        q.value='—';q.disabled=true;q.classList.remove('field-error');
+        q.value='—';q.disabled=true;q.classList.remove('fe');
     }else{
         setDropdownDisabled('Contenu',false);setDropdownDisabled('Zones',false);
         q.disabled=false;
@@ -673,23 +504,22 @@ function onIdInput(el){
     const errEl=$('idError');
     errEl.style.display=err?'block':'none';
     errEl.textContent=dup?'Ce numéro existe déjà':(err?'12 chiffres requis':'');
-    $('idWrapper').style.borderColor=err?'var(--red)':'var(--glass-border-soft)';
+    $('idWrap').classList.toggle('fe',err);
     $('mId').value=full;
     const s=full.length>17?full.slice(17,23):'';
-    $('mSuffixe').value=s;
-    $('mSuffixeDisplay').textContent=s||'—';
+    $('mSuffixe').value=s;$('mSuffixeDisplay').textContent=s||'—';
 }
 
 function resetModal(){
     $('mIdSuffix').value='';$('mId').value='';
     $('idCounter').textContent=`(0/${VAR_LEN} chiffres)`;
     $('mSuffixe').value='';$('mSuffixeDisplay').textContent='—';
-    $('idError').style.display='none';$('idWrapper').style.borderColor='var(--glass-border-soft)';
-    const q=$('mQte');q.value='';q.disabled=false;q.classList.remove('field-error');
-    $('qteError').style.display='none';
-    $('mEmp').value='';
+    $('idError').style.display='none';$('idWrap').classList.remove('fe');
+    const q=$('mQte');q.value='';q.disabled=false;q.classList.remove('fe');
+    $('qteError').style.display='none';$('mEmp').value='';
     document.querySelectorAll('input[name="mFonctionnel"]').forEach(r=>r.checked=false);
-    $('toggleGroup').classList.remove('field-error');$('foncError').style.display='none';
+    $('toggleGroup').classList.remove('fe');$('foncError').style.display='none';
+    $('dateInfo').style.display='none';
     setDropdownDisabled('Contenu',false);setDropdownValue('Contenu','');
     setDropdownDisabled('Zones',false);setDropdownValue('Zones','');
     setDropdownValue('Format','');
@@ -713,14 +543,16 @@ function ouvrirModal(index=-1){
         if(t.fonctionnel==='non')setNonFoncMode(true);
         else{
             setDropdownValue('Contenu',t.contenu||'');setDropdownValue('Zones',t.zones||'');
-            $('mQte').value=t.quantite||'';
-            onContenuChange(t.contenu||'');
+            $('mQte').value=t.quantite||'';onContenuChange(t.contenu||'');
         }
+        const di=fmtDateHeure(t.ajoute);
+        if(di){$('dateInfo').textContent='Ajouté le '+di;$('dateInfo').style.display='block';}
     }
     requestAnimationFrame(()=>$('myModal').classList.add('open'));
 }
 function fermerModal(){$('myModal').classList.remove('open');closeAllDropdowns(null);}
 $('myModal').addEventListener('click',function(e){if(e.target===this)fermerModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')fermerModal();});
 
 function confirmerSuppression(event){
     if(!event.shiftKey&&!confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?\n\nMaintenez Shift + clic pour supprimer sans confirmation.'))return;
@@ -730,23 +562,21 @@ function confirmerSuppression(event){
 function sauvegarder(){
     const varPart=$('mIdSuffix').value, editIndex=parseInt($('editIndex').value), fullId=$('mId').value;
     const lenBad=varPart.length!==VAR_LEN, dup=tickets.some((t,i)=>t.id===fullId&&i!==editIndex);
-    let bad=(lenBad||dup)?$('idWrapper'):null;
-    const flag=(el,cond)=>{el.classList.toggle('field-error',cond);if(cond&&!bad)bad=el;};
+    let bad=(lenBad||dup)?$('idWrap'):null;
+    const flag=(el,cond)=>{el.classList.toggle('fe',cond);if(cond&&!bad)bad=el;};
     const idErr=$('idError');
     idErr.textContent=dup?'Ce numéro existe déjà':'12 chiffres requis';
     idErr.style.display=(lenBad||dup)?'block':'none';
-    $('idWrapper').style.borderColor=(lenBad||dup)?'var(--red)':'var(--glass-border-soft)';
+    $('idWrap').classList.toggle('fe',lenBad||dup);
 
     const format=$('mFormat').value, contenu=$('mContenu').value, zones=$('mZones').value;
     flag($('btnFormat'),!format);
-    flag($('btnContenu'),!$('btnContenu').classList.contains('disabled-field')&&!contenu);
-    flag($('btnZones'),!$('btnZones').classList.contains('disabled-field')&&!zones);
+    flag($('btnContenu'),!$('btnContenu').classList.contains('dis')&&!contenu);
+    flag($('btnZones'),!$('btnZones').classList.contains('dis')&&!zones);
 
-    const q=$('mQte');
-    let qBad=false;
+    const q=$('mQte');let qBad=false;
     if(!q.disabled){const v=q.value.trim();qBad=!(v&&!isNaN(v)&&parseInt(v)>=1);}
-    $('qteError').style.display=qBad?'block':'none';
-    flag(q,qBad);
+    $('qteError').style.display=qBad?'block':'none';flag(q,qBad);
 
     const fonctionnel=document.querySelector('input[name="mFonctionnel"]:checked')?.value||'';
     $('foncError').style.display=fonctionnel?'none':'block';
@@ -757,12 +587,13 @@ function sauvegarder(){
     const isNon=fonctionnel==='non', ticket={
         id:fullId, suffixe:$('mSuffixe').value, format,
         contenu:isNon?'—':contenu, zones:isNon?'—':zones, quantite:isNon?'—':q.value,
-        emprunteur:$('mEmp').value.trim()||'—', fonctionnel
+        emprunteur:$('mEmp').value.trim()||'—', fonctionnel,
+        /* Date d'ajout automatique : posée à la création, conservée ensuite */
+        ajoute:editIndex===-1?new Date().toISOString():(tickets[editIndex].ajoute||'')
     };
     if(editIndex===-1)tickets.push(ticket);else tickets[editIndex]=ticket;
     sauvegarderAPI();fermerModal();render();
 }
-
 function supprimer(){
     tickets.splice(parseInt($('editIndex').value),1);
     sauvegarderAPI();fermerModal();render();
@@ -772,7 +603,6 @@ function sortBy(col){
     sortDirection=sortColumn===col?(sortDirection==='asc'?'desc':'asc'):'asc';
     sortColumn=col;render();
 }
-
 function getTicketsTries(){
     const q=$('searchInput').value.toLowerCase();
     let rows=tickets.map((t,i)=>({t,i}));
@@ -785,19 +615,18 @@ function getTicketsTries(){
     });
     return rows;
 }
-
 function majIconesTri(){
-    document.querySelectorAll('.sort-icon').forEach(icon=>{
+    document.querySelectorAll('.si').forEach(icon=>{
         const on=icon.dataset.col===sortColumn;
-        icon.className='sort-icon ti '+(on?(sortDirection==='asc'?'ti-sort-ascending':'ti-sort-descending')+' active':'ti-arrows-sort');
+        icon.className='ti si '+(on?(sortDirection==='asc'?'ti-sort-ascending':'ti-sort-descending')+' active':'ti-arrows-sort');
     });
 }
 
 const initials=n=>(!n||n==='—')?'—':n.trim().split(/\s+/).map(w=>w[0].toUpperCase()).slice(0,2).join('');
-function fonctionnelBadge(v){
-    if(v==='oui')return '<span class="badge-etat ok"><i class="ti ti-check"></i><span class="text-collapse"> Fonctionnel</span></span>';
-    if(v==='non')return '<span class="badge-etat ko"><i class="ti ti-x"></i><span class="text-collapse"> Non fonctionnel</span></span>';
-    return '<span style="color:var(--text-muted)">—</span>';
+function etatChip(v){
+    if(v==='oui')return '<span class="chip ok"><i class="ti ti-check"></i><span class="tc">Fonctionnel</span></span>';
+    if(v==='non')return '<span class="chip ko"><i class="ti ti-x"></i><span class="tc">Non fonctionnel</span></span>';
+    return '<span class="mut">—</span>';
 }
 
 function render(){
@@ -807,32 +636,31 @@ function render(){
     const anim=firstRender&&rows.length;
     tbody.innerHTML=rows.map(({t,i},idx)=>{
         const g=gain(t), tip=g?` title="Valeur : ${eur(g)}"`:'';
-        return `<tr${anim?` class="r-in" style="animation-delay:${Math.min(idx*25,300)}ms"`:''} onclick="toggleSelectRow(this,event)">
-        <td class="id-style" data-label="ID complet"><span class="id-full">${t.id||'—'}</span><span class="id-suf">${t.suffixe||'—'}</span></td>
-        <td class="suffixe-style" data-label="Suffixe">${t.suffixe||'—'}</td>
-        <td data-label="Format"><span class="badge-format" style="${formatBadgeStyle(t.format)}"><i class="ti ti-ticket"></i>${t.format||'—'}</span></td>
-        <td class="contenu-style" data-label="Contenu">${t.contenu||'—'}</td>
-        <td data-label="Zones"><div class="zones-cell">${zonesDots(t.zones)}<span style="color:var(--text-muted)">${t.zones||'—'}</span></div></td>
-        <td data-label="Qté" style="font-weight:600;text-align:center"${tip}>${t.quantite||'—'}</td>
-        <td data-label="Emprunteur"><div class="emprunteur-cell">${t.emprunteur&&t.emprunteur!=='—'?`<div class="emp-avatar">${initials(t.emprunteur)}</div><span>${t.emprunteur}</span>`:'<span style="color:var(--text-muted)">—</span>'}</div></td>
-        <td data-label="Fonctionnel">${fonctionnelBadge(t.fonctionnel)}</td>
-        <td><button class="btn-edit" onclick="ouvrirModal(${i})" aria-label="Éditer"><i class="ti ti-edit"></i><span class="text-collapse"> Éditer</span></button></td></tr>`;
+        return `<tr${anim?` class="in" style="animation-delay:${Math.min(idx*25,300)}ms"`:''} onclick="toggleSelectRow(this,event)">
+        <td class="idc" data-label="ID complet"><span class="id-full">${t.id||'—'}</span><span class="id-suf">${t.suffixe||'—'}</span></td>
+        <td class="suf" data-label="Suffixe">${t.suffixe||'—'}</td>
+        <td data-label="Format">${formatChip(t.format)}</td>
+        <td class="cnt" data-label="Contenu">${t.contenu||'—'}</td>
+        <td data-label="Zones"><div class="zc">${zonesDots(t.zones)}<span class="mut">${t.zones||'—'}</span></div></td>
+        <td data-label="Qté" style="font-weight:600"${tip}>${t.quantite||'—'}</td>
+        <td data-label="Emprunteur"><div class="ec">${t.emprunteur&&t.emprunteur!=='—'?`<div class="av">${initials(t.emprunteur)}</div><span>${t.emprunteur}</span>`:'<span class="mut">—</span>'}</div></td>
+        <td data-label="État">${etatChip(t.fonctionnel)}</td>
+        <td class="mut" data-label="Ajouté le" title="${fmtDateHeure(t.ajoute)}" style="white-space:nowrap">${fmtDate(t.ajoute)}</td>
+        <td><button class="btn" style="height:40px;padding:0 16px" onclick="ouvrirModal(${i})" aria-label="Éditer"><i class="ti ti-edit"></i><span class="tc">Éditer</span></button></td></tr>`;
     }).join('');
     if(rows.length)firstRender=false;
 }
-
 function toggleSelectRow(tr,e){
-    if(e.target.closest('.btn-edit'))return;
+    if(e.target.closest('.btn'))return;
     const was=tr.classList.contains('selected');
     document.querySelectorAll('#ticketBody tr.selected').forEach(r=>r.classList.remove('selected'));
     if(!was)tr.classList.add('selected');
 }
 
-/* Recherche : débouncée, et mode « suffixe seul » sur mobile tant qu'on cherche */
+/* Recherche débouncée ; mode « suffixe seul » sur mobile pendant la recherche */
 const si=$('searchInput');let st;
 const majSearching=()=>document.body.classList.toggle('searching',document.activeElement===si||!!si.value);
-si.addEventListener('focus',majSearching);
-si.addEventListener('blur',majSearching);
+si.addEventListener('focus',majSearching);si.addEventListener('blur',majSearching);
 si.addEventListener('input',()=>{majSearching();clearTimeout(st);st=setTimeout(render,150);});
 
 /* ---------- Accès : mot de passe OU carte NFC ----------
