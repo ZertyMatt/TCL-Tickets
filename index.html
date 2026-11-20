@@ -634,10 +634,14 @@ function setNonFoncMode(isNon){
     }
 }
 document.querySelectorAll('input[name="mFonctionnel"]').forEach(r=>r.addEventListener('change',function(){setNonFoncMode(this.value==='non');}));
-
+function majMiroir(){
+    const v=$('mIdSuffix').value;
+    $('idMirror').innerHTML=v.slice(0,6)+'<b class="sfx2">'+v.slice(6)+'</b>';
+}
 /* Saisie du numéro : longueur + doublon vérifiés en direct */
 function onIdInput(el){
     el.value=el.value.replace(/\D/g,'').slice(0,VAR_LEN);
+    majMiroir();
     const n=el.value.length, full=PREFIX+el.value, editIdx=parseInt($('editIndex').value);
     const dup=n===VAR_LEN&&tickets.some((t,i)=>t.id===full&&i!==editIdx);
     const err=dup||(n>0&&n<VAR_LEN);
@@ -653,6 +657,7 @@ function onIdInput(el){
 
 function resetModal(){
     $('mIdSuffix').value='';$('mId').value='';
+    majMiroir();
     $('idCounter').textContent=`(0/${VAR_LEN} chiffres)`;
     $('mSuffixe').value='';$('mSuffixeDisplay').textContent='—';
     $('idError').style.display='none';$('idWrap').classList.remove('fe');
@@ -677,6 +682,7 @@ function ouvrirModal(index=-1){
     if(index!==-1){
         const t=tickets[index], varPart=t.id.startsWith(PREFIX)?t.id.slice(PREFIX.length):t.id;
         $('mIdSuffix').value=varPart;$('mId').value=t.id;
+        majMiroir();
         $('idCounter').textContent=`(${varPart.length}/${VAR_LEN} chiffres)`;
         $('mSuffixe').value=t.suffixe;$('mSuffixeDisplay').textContent=t.suffixe||'—';
         setDropdownValue('Format',t.format||'');
