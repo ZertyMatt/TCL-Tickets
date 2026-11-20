@@ -12,7 +12,35 @@
 <link rel="apple-touch-icon" href="./icon-192.png">
 <link rel="preconnect" href="https://api.npoint.io" crossorigin>
 <link rel="preload" href="./fonts/Google%20Sans%20Flex.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="./icons.css">
+<style>
+/* ===== Icônes (ex icons.css) ===== */
+.ti{width:1em;height:1em;background:currentColor;-webkit-mask:var(--i) center/contain no-repeat;mask:var(--i) center/contain no-repeat;flex-shrink:0}
+.ti-lock{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6' /%3E %3Cpath d='M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0' /%3E %3Cpath d='M8 11v-4a4 4 0 1 1 8 0v4' /%3E%3C/svg%3E")}
+.ti-lock-open{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2l0 -6' /%3E %3Cpath d='M11 16a1 1 0 1 0 2 0a1 1 0 1 0 -2 0' /%3E %3Cpath d='M8 11v-5a4 4 0 0 1 8 0' /%3E%3C/svg%3E")}
+.ti-nfc{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20a3 3 0 0 1 -3 -3v-11l5 5' /%3E %3Cpath d='M13 4a3 3 0 0 1 3 3v11l-5 -5' /%3E %3Cpath d='M4 7a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v10a3 3 0 0 1 -3 3h-10a3 3 0 0 1 -3 -3l0 -10' /%3E%3C/svg%3E")}
+.ti-ticket{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 5l0 2' /%3E %3Cpath d='M15 11l0 2' /%3E %3Cpath d='M15 17l0 2' /%3E %3Cpath d='M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-3a2 2 0 0 0 0 -4v-3a2 2 0 0 1 2 -2' /%3E%3C/svg%3E")}
+.ti-ticket-off{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 5v2' /%3E %3Cpath d='M15 17v2' /%3E %3Cpath d='M9 5h10a2 2 0 0 1 2 2v3a2 2 0 1 0 0 4v3m-2 2h-14a2 2 0 0 1 -2 -2v-3a2 2 0 1 0 0 -4v-3a2 2 0 0 1 2 -2' /%3E %3Cpath d='M3 3l18 18' /%3E%3C/svg%3E")}
+.ti-cloud{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.657 18c-2.572 0 -4.657 -2.007 -4.657 -4.483c0 -2.475 2.085 -4.482 4.657 -4.482c.393 -1.762 1.794 -3.2 3.675 -3.773c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.913 0 3.464 1.56 3.464 3.486c0 1.927 -1.551 3.487 -3.465 3.487h-11.878' /%3E%3C/svg%3E")}
+.ti-cloud-upload{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1' /%3E %3Cpath d='M9 15l3 -3l3 3' /%3E %3Cpath d='M12 12l0 9' /%3E%3C/svg%3E")}
+.ti-cloud-check{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 18.004h-4.343c-2.572 -.004 -4.657 -2.011 -4.657 -4.487c0 -2.475 2.085 -4.482 4.657 -4.482c.393 -1.762 1.794 -3.2 3.675 -3.773c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.388 0 2.585 .82 3.138 2.007' /%3E %3Cpath d='M15 19l2 2l4 -4' /%3E%3C/svg%3E")}
+.ti-cloud-x{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 18.004h-6.343c-2.572 -.004 -4.657 -2.011 -4.657 -4.487c0 -2.475 2.085 -4.482 4.657 -4.482c.393 -1.762 1.794 -3.2 3.675 -3.773c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.37 0 2.556 .8 3.117 1.964' /%3E %3Cpath d='M22 22l-5 -5' /%3E %3Cpath d='M17 22l5 -5' /%3E%3C/svg%3E")}
+.ti-search{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0' /%3E %3Cpath d='M21 21l-6 -6' /%3E%3C/svg%3E")}
+.ti-download{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2' /%3E %3Cpath d='M7 11l5 5l5 -5' /%3E %3Cpath d='M12 4l0 12' /%3E%3C/svg%3E")}
+.ti-upload{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2' /%3E %3Cpath d='M7 9l5 -5l5 5' /%3E %3Cpath d='M12 4l0 12' /%3E%3C/svg%3E")}
+.ti-plus{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5l0 14' /%3E %3Cpath d='M5 12l14 0' /%3E%3C/svg%3E")}
+.ti-arrows-sort{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l4 -4l4 4m-4 -4v14' /%3E %3Cpath d='M21 15l-4 4l-4 -4m4 4v-14' /%3E%3C/svg%3E")}
+.ti-sort-ascending{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l7 0' /%3E %3Cpath d='M4 12l7 0' /%3E %3Cpath d='M4 18l9 0' /%3E %3Cpath d='M15 9l3 -3l3 3' /%3E %3Cpath d='M18 6l0 12' /%3E%3C/svg%3E")}
+.ti-sort-descending{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l9 0' /%3E %3Cpath d='M4 12l7 0' /%3E %3Cpath d='M4 18l7 0' /%3E %3Cpath d='M15 15l3 3l3 -3' /%3E %3Cpath d='M18 6l0 12' /%3E%3C/svg%3E")}
+.ti-route{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 19a2 2 0 1 0 4 0a2 2 0 0 0 -4 0' /%3E %3Cpath d='M19 7a2 2 0 1 0 0 -4a2 2 0 0 0 0 4' /%3E %3Cpath d='M11 19h5.5a3.5 3.5 0 0 0 0 -7h-8a3.5 3.5 0 0 1 0 -7h4.5' /%3E%3C/svg%3E")}
+.ti-check{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10' /%3E%3C/svg%3E")}
+.ti-alert-triangle{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 9v4' /%3E %3Cpath d='M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0' /%3E %3Cpath d='M12 16h.01' /%3E%3C/svg%3E")}
+.ti-wallet{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12' /%3E %3Cpath d='M20 12v4h-4a2 2 0 0 1 0 -4h4' /%3E%3C/svg%3E")}
+.ti-edit{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1' /%3E %3Cpath d='M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415' /%3E %3Cpath d='M16 5l3 3' /%3E%3C/svg%3E")}
+.ti-x{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6l-12 12' /%3E %3Cpath d='M6 6l12 12' /%3E%3C/svg%3E")}
+.ti-device-floppy{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2' /%3E %3Cpath d='M10 14a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' /%3E %3Cpath d='M14 4l0 4l-6 0l0 -4' /%3E%3C/svg%3E")}
+.ti-trash{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7l16 0' /%3E %3Cpath d='M10 11l0 6' /%3E %3Cpath d='M14 11l0 6' /%3E %3Cpath d='M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12' /%3E %3Cpath d='M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3' /%3E%3C/svg%3E")}
+.ti-chevron-down{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6' /%3E%3C/svg%3E")}
+</style>
 <style>
 @font-face{font-family:"Google Sans Flex";src:url("./fonts/Google%20Sans%20Flex.ttf") format("truetype");font-weight:100 1000;font-stretch:25% 151%;font-display:swap}
 *,*::before,*::after{box-sizing:border-box}
@@ -86,7 +114,7 @@ main{padding:4px 16px 104px;max-width:1500px;margin:0 auto}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin-bottom:16px}
 .stat{height:88px;padding:0 16px;border-radius:28px;background:var(--c2);display:flex;align-items:center;gap:12px;animation:up .4s var(--emph) backwards}
 .stat:nth-child(2){border-radius:28px 12px 28px 12px}.stat:nth-child(4){border-radius:12px 28px 12px 28px}
-.stat-ic{width:44px;height:44px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;background:var(--ib,var(--pc));color:var(--ic,var(--onpc))}
+.stat-ic{width:48px;height:48px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;background:var(--ib,var(--pc));color:var(--ic,var(--onpc))}
 .stat-b{display:flex;flex-direction:column;min-width:0}
 .stat .l{font-size:12px;color:var(--onv);white-space:nowrap}
 .stat .v{font-size:1.6rem;line-height:1.15;font-variation-settings:"wght" 700,"wdth" 118,"ROND" 100}
@@ -178,7 +206,7 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
  main{padding:0 12px 96px}
  .stats{grid-template-columns:1fr 1fr}
  .stat{height:72px;padding:0 12px;gap:10px;border-radius:24px!important}
- .stat-ic{width:38px;height:38px;font-size:1.15rem}.stat .v{font-size:1.35rem}.stat .l{font-size:11px}
+ .stat-ic{width:42px;height:42px;font-size:1.15rem}.stat .v{font-size:1.35rem}.stat .l{font-size:11px}
  .fab{height:56px;padding:0 20px 0 16px}
  #myModal{align-items:flex-end;padding:0}
  .sheet{max-width:100%;border-radius:28px 28px 0 0;max-height:92dvh;padding:12px 16px 16px;transform:translateY(100%)}
@@ -298,6 +326,29 @@ const API_URL='https://api.npoint.io/31ba31f685940c724c54', PREFIX='06-14988599'
 let tickets=[], sortColumn='id', sortDirection='asc', statsInit=false, firstRender=true;
 const $=id=>document.getElementById(id);
 
+/* Formes M3E : {x,y,w,h} = boîte englobante dans la planche d'origine, d = tracé SVG */
+const SHAPES={
+ cookie4:{x:2404,y:1503,w:292,h:292,d:"M2590.39 1509.47C2653.11 1482.23 2716.77 1545.89 2689.53 1608.61L2685.02 1618.98C2676.71 1638.13 2676.71 1659.87 2685.02 1679.02L2689.53 1689.39C2716.77 1752.11 2653.11 1815.77 2590.39 1788.53L2580.02 1784.02C2560.87 1775.71 2539.13 1775.71 2519.98 1784.02L2509.61 1788.53C2446.89 1815.77 2383.23 1752.11 2410.47 1689.39L2414.98 1679.02C2423.29 1659.87 2423.29 1638.13 2414.98 1618.98L2410.47 1608.61C2383.23 1545.89 2446.89 1482.23 2509.61 1509.47L2519.98 1513.98C2539.13 1522.29 2560.87 1522.29 2580.02 1513.98L2590.39 1509.47Z"},
+ arch:{x:2875,y:522,w:310,h:310,d:"M3185 780.727C3185 786.96 3185 790.076 3184.69 792.696C3182.26 813.14 3166.14 829.259 3145.7 831.689C3143.08 832 3139.96 832 3133.73 832H2926.27C2920.04 832 2916.92 832 2914.3 831.689C2893.86 829.259 2877.74 813.14 2875.31 792.696C2875 790.076 2875 786.96 2875 780.727L2875 677C2875 591.396 2944.4 522 3030 522C3115.6 522 3185 591.396 3185 677V780.727Z"},
+ squircle:{x:1910,y:517,w:320,h:320,d:"M2230 689C2230 733.717 2230 756.076 2222.98 773.812C2212.81 799.485 2192.49 819.813 2166.81 829.978C2149.08 837 2126.72 837 2082 837H2058C2013.28 837 1990.92 837 1973.19 829.978C1947.51 819.813 1927.19 799.485 1917.02 773.812C1910 756.076 1910 733.717 1910 689L1910 665C1910 620.283 1910 597.924 1917.02 580.188C1927.19 554.515 1947.51 534.187 1973.19 524.022C1990.92 517 2013.28 517 2058 517L2082 517C2126.72 517 2149.08 517 2166.81 524.022C2192.49 534.187 2212.81 554.515 2222.98 580.188C2230 597.924 2230 620.283 2230 665V689Z"},
+ triangle:{x:2392,y:1018,w:316,h:288,d:"M2496.46 1071.2C2511.6 1044.82 2519.16 1031.63 2528.34 1026.06C2541.65 1017.98 2558.35 1017.98 2571.66 1026.06C2580.84 1031.63 2588.4 1044.82 2603.54 1071.2L2685.31 1213.72C2700.3 1239.85 2707.8 1252.91 2707.99 1263.58C2708.28 1279.06 2699.95 1293.42 2686.36 1300.86C2676.99 1306 2661.92 1306 2631.77 1306H2468.23C2438.08 1306 2423.01 1306 2413.64 1300.86C2400.05 1293.42 2391.72 1279.06 2392.01 1263.58C2392.2 1252.91 2399.7 1239.85 2414.69 1213.72L2496.46 1071.2Z"},
+ pentagon:{x:3834,y:1009,w:312,h:307,d:"M3955.06 1022.46C3976.09 1007.18 4004.57 1007.18 4025.6 1022.46L4122.93 1093.17C4143.95 1108.45 4152.75 1135.53 4144.72 1160.25L4107.55 1274.67C4099.51 1299.39 4076.48 1316.13 4050.48 1316.13H3930.18C3904.19 1316.13 3881.15 1299.39 3873.12 1274.67L3835.94 1160.25C3827.91 1135.53 3836.71 1108.45 3857.74 1093.17L3955.06 1022.46Z"}
+};
+function buildShapes(){
+    const NS='http://www.w3.org/2000/svg', svg=document.createElementNS(NS,'svg'), defs=document.createElementNS(NS,'defs');
+    svg.setAttribute('width','0');svg.setAttribute('height','0');svg.style.cssText='position:absolute;pointer-events:none';
+    svg.setAttribute('aria-hidden','true');
+    for(const [id,s] of Object.entries(SHAPES)){
+        const m=Math.max(s.w,s.h), cp=document.createElementNS(NS,'clipPath'), p=document.createElementNS(NS,'path');
+        cp.id='sh-'+id;cp.setAttribute('clipPathUnits','objectBoundingBox');
+        /* centre la forme dans un carré, puis ramène à 0..1 */
+        p.setAttribute('transform',`scale(${1/m}) translate(${-s.x+(m-s.w)/2} ${-s.y+(m-s.h)/2})`);
+        p.setAttribute('d',s.d);
+        cp.appendChild(p);defs.appendChild(cp);
+    }
+    svg.appendChild(defs);document.body.appendChild(svg);
+}
+
 /* Tarifs TCL (€) : [Zones 1-2, 2 zones voisines, Toutes zones sauf Z1, Toutes zones]. Titres à voyages : prix PAR VOYAGE. */
 const D=(a,n)=>a.map(v=>+(v/n).toFixed(4)), F=v=>[v,v,v,v];
 const PRIX={
@@ -379,13 +430,13 @@ function renderStats(){
     const nbKo=tickets.filter(t=>t.fonctionnel==='non').length;
     const eco=eur(Math.round(tickets.reduce((s,t)=>s+gain(t),0)*100)/100);
     if(!statsInit){
-        const S=(ic,l,id,v,bg,fg)=>`<div class="stat"><div class="stat-ic" style="--ib:${bg};--ic:${fg}"><i class="ti ti-${ic}"></i></div><div class="stat-b"><div class="l">${l}</div><div class="v" id="${id}">${v}</div></div></div>`;
+        const S=(ic,l,id,v,bg,fg,shape)=>`<div class="stat"><div class="stat-ic" style="--ib:${bg};--ic:${fg};clip-path:url(#sh-${shape})"><i class="ti ti-${ic}"></i></div><div class="stat-b"><div class="l">${l}</div><div class="v" id="${id}">${v}</div></div></div>`;
         $('statsBar').innerHTML=
-            S('ticket','Tickets','statTotal',0,'var(--pc)','var(--onpc)')+
-            S('route','Total voyages','statVoyages',0,'#1c3a6b','#adc6ff')+
-            S('check','Fonctionnels','statOk',0,'var(--okc)','var(--ok)')+
-            S('alert-triangle','Non fonctionnels','statKo',0,'var(--errc)','var(--err)')+
-            S('wallet','Économies','statEco','0,00 €','var(--okc)','var(--ok)');
+            S('ticket','Tickets','statTotal',0,'var(--pc)','var(--onpc)','cookie4')+
+            S('route','Total voyages','statVoyages',0,'#1c3a6b','#adc6ff','arch')+
+            S('check','Fonctionnels','statOk',0,'var(--okc)','var(--ok)','squircle')+
+            S('alert-triangle','Non fonctionnels','statKo',0,'var(--errc)','var(--err)','triangle')+
+            S('wallet','Économies','statEco','0,00 €','var(--okc)','var(--ok)','pentagon');
         statsInit=true;
     }
     animateNumber($('statTotal'),tickets.length);
@@ -720,9 +771,10 @@ function initAuth(){
     if(s&&!s.startsWith('__')&&(s===AUTH.pass||s===AUTH.nfc))deverrouiller(s);
 }
 
-/* Forme « cookie » M3E (9 lobes) partagée par le verrou et le bouton Supprimer */
+/* Forme « cookie » M3E (9 lobes) pour l'icône du verrou */
 const cookie=(n=9,a=.075)=>'polygon('+Array.from({length:240},(_,i)=>{const t=i/240*2*Math.PI,r=46*(1+a*Math.cos(n*t));return (50+r*Math.cos(t)).toFixed(2)+'% '+(50+r*Math.sin(t)).toFixed(2)+'%';}).join(',')+')';
 document.querySelectorAll('.lock-ic').forEach(e=>e.style.clipPath=cookie());
+buildShapes();
 buildDropdowns();
 initAuth();
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
