@@ -41,7 +41,7 @@ body.locked .bar,body.locked main,body.locked .fab,body.locked #myModal{display:
 body.locked #lockScreen{display:flex}
 .lock-box{width:100%;max-width:380px;background:var(--c2);border-radius:28px;padding:32px 24px;text-align:center;animation:up .4s var(--emph)}
 .lock-ic{width:72px;height:72px;margin:0 auto 16px;background:var(--pc);color:var(--onpc);font-size:2rem;
- border-radius:30% 70% 70% 30%/30% 30% 70% 70%;display:flex;align-items:center;justify-content:center}
+ display:flex;align-items:center;justify-content:center}
 .lock-box h2{margin:0 0 20px;font-size:1.4rem;font-variation-settings:"wght" 600,"wdth" 110,"ROND" 100}
 .lock-box .btn{width:100%;margin-top:12px}
 .lock-sep{margin:16px 0 4px;font-size:12px;color:var(--out)}
@@ -155,8 +155,15 @@ input.fc:disabled,.csb.dis{opacity:.5;cursor:not-allowed}
 #fOui:checked+label{background:var(--okc);color:var(--ok);border-radius:20px}
 #fNon:checked+label{background:var(--errc);color:var(--err);border-radius:20px}
 .tg.fe{border-color:var(--err)}
-.acts{display:flex;gap:8px;margin-top:24px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.acts{display:flex;gap:2px;margin-top:24px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.acts .btn{height:56px;border-radius:8px;transition:border-radius .35s var(--spring),transform .15s,background .2s}
+.acts .btn:first-child{border-radius:28px 8px 8px 28px}
+.acts .btn:last-child{border-radius:8px 28px 28px 8px}
 .acts .fill{flex:1}
+.acts #btnSupp,.acts #btnSupp:hover,.acts #btnSupp:active{width:56px;height:56px;padding:0;font-size:1.3rem;align-self:center;flex-shrink:0;border-radius:0}
+.acts .btn:hover{border-radius:28px}
+.acts .btn:active{border-radius:20px;transform:scale(.97)}
+.acts #btnSupp:hover{transform:scale(1.08) rotate(-6deg)}
 
 /* Responsive */
 @media(max-width:1100px){.tc{display:none}}
@@ -714,6 +721,9 @@ function initAuth(){
     if(s&&!s.startsWith('__')&&(s===AUTH.pass||s===AUTH.nfc))deverrouiller(s);
 }
 
+/* Forme « cookie » M3E (9 lobes) partagée par le verrou et le bouton Supprimer */
+const cookie=(n=9,a=.075)=>'polygon('+Array.from({length:240},(_,i)=>{const t=i/240*2*Math.PI,r=46*(1+a*Math.cos(n*t));return (50+r*Math.cos(t)).toFixed(2)+'% '+(50+r*Math.sin(t)).toFixed(2)+'%';}).join(',')+')';
+document.querySelectorAll('.lock-ic,#btnSupp').forEach(e=>e.style.clipPath=cookie());
 buildDropdowns();
 initAuth();
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
